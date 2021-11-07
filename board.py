@@ -77,5 +77,5 @@ class GameBoard:
         print("|{}|{}|{}|{}|{}|{}|{}|{}|".format("A","B","C","D","E","F","G", "H"))
         print("")
     
-    def move_piece(self):
+    def move_piece(self, cord1, cord2):
         pass

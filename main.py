@@ -12,4 +12,4 @@ while(1):
     b1.draw_board()
     move = input("Input a move:")
     cord1, cord2 = move.split(":")
-    b1.move_piece()
+    b1.move_piece(cord1, cord2)
