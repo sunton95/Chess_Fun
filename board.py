@@ -13,31 +13,31 @@ class GameBoard:
         index = [1, 1]
 
         for pieces in pieces_on_board:
-            match pieces:
-                case 'p':
-                    self.game_state.append(Pawn("Black", index, "p")) 
-                case 'r':
-                    self.game_state.append(Rook("Black", index, "r")) 
-                case 'n':
-                    self.game_state.append(Knight("Black", index, "n"))         
-                case 'b':
-                    self.game_state.append(Bishop("Black", index, "b")) 
-                case 'q':
-                    self.game_state.append(Queen("Black", index, "q")) 
-                case 'k':
-                    self.game_state.append(King("Black", index, "k"))  
-                case 'P':
-                    self.game_state.append(Pawn("White", index, "P")) 
-                case 'R':
-                    self.game_state.append(Rook("White", index, "R"))
-                case 'N':
-                    self.game_state.append(Knight("White", index, "N"))
-                case 'B':
-                    self.game_state.append(Bishop("White", index, "B"))
-                case 'Q':
-                    self.game_state.append(Queen("White", index, "Q"))
-                case 'K':
-                    self.game_state.append(King("White", index, "K"))
+            # match pieces:
+            #     case 'p':
+            #         self.game_state.append(Pawn("Black", index, "p")) 
+            #     case 'r':
+            #         self.game_state.append(Rook("Black", index, "r")) 
+            #     case 'n':
+            #         self.game_state.append(Knight("Black", index, "n"))         
+            #     case 'b':
+            #         self.game_state.append(Bishop("Black", index, "b")) 
+            #     case 'q':
+            #         self.game_state.append(Queen("Black", index, "q")) 
+            #     case 'k':
+            #         self.game_state.append(King("Black", index, "k"))  
+            #     case 'P':
+            #         self.game_state.append(Pawn("White", index, "P")) 
+            #     case 'R':
+            #         self.game_state.append(Rook("White", index, "R"))
+            #     case 'N':
+            #         self.game_state.append(Knight("White", index, "N"))
+            #     case 'B':
+            #         self.game_state.append(Bishop("White", index, "B"))
+            #     case 'Q':
+            #         self.game_state.append(Queen("White", index, "Q"))
+            #     case 'K':
+            #         self.game_state.append(King("White", index, "K"))
 
             if pieces == "/":
                 index[1] += 1

@@ -1,40 +1,30 @@
 from postition import *
 
 class Pieces:
-    def __init__(self, color, position):
+    def __init__(self, color, position, label):
         self.color = color
         self.position = Position(position[0], position[1])
+        self.label = label
+
 
     def __str__(self):
         return "{} {}".format(self.color, self.position)
 
 
 class Pawn(Pieces):
-    def __init__(self, color, position, label):
-        super().__init__(color, position)
-        self.label = label
+    pass
 
 class Rook(Pieces):
-    def __init__(self, color, position, label):
-        super().__init__(color, position)
-        self.label = label
+    pass
 
 class Bishop(Pieces):
-    def __init__(self, color, position, label):
-        super().__init__(color, position)
-        self.label = label
+    pass
 
 class Knight(Pieces):
-    def __init__(self, color, position, label):
-        super().__init__(color, position)
-        self.label = label
+    pass
 
 class King(Pieces):
-    def __init__(self, color, position, label):
-        super().__init__(color, position)
-        self.label = label
+    pass
 
 class Queen(Pieces):
-    def __init__(self, color, position, label):
-        super().__init__(color, position)
-        self.label = label
+    pass
