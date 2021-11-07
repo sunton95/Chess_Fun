@@ -8,12 +8,8 @@ b1 = GameBoard()
 
 b1.board_setup(FEN_string)
 
-print(Position.chess_notation_to_cord("A1"))
-print(Position.chess_notation_to_cord("A2"))
-print(Position.chess_notation_to_cord("A3"))
-print(Position.chess_notation_to_cord("B2"))
-print(Position.chess_notation_to_cord("H2"))
-
-# while(1):
-#     b1.draw_board()
-#     move = input("Input a move:")
+while(1):
+    b1.draw_board()
+    move = input("Input a move:")
+    cord1, cord2 = move.split(":")
+    b1.move_piece()
