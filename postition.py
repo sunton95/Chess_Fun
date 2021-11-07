@@ -1,6 +1,3 @@
-from os import X_OK
-
-
 class Position:
     def __init__(self, x, y):
         self.x = x
@@ -12,6 +9,11 @@ class Position:
     def convert_coordinates(self):
         return self.x + ((self.y - 1) * 8) - 1
 
+    def __eq__(self, other):
+        if (isinstance(other, Position)):
+            return self.x == other.x and self.y == other.y
+
+
     @staticmethod
     def chess_notation_to_cord(str):
         array = ["A", "B", "C", "D", "E", "F", "G", "H"]
@@ -22,5 +24,5 @@ class Position:
                 cord = x
             x += 1
 
-        return [cord, int(str[1])]
+        return Position(cord, int(str[1]))
 
