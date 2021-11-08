@@ -85,9 +85,15 @@ class GameBoard:
         new_pos = Position.chess_notation_to_cord(cord2)
         index = 0
 
+        #Add function that looks for check
+        #TODO add a function that makes sure the move does not generate a check on self
+
+        #Finds if there is a piece on the selected square
         for pieces in self.game_state:
             if pieces.position == org_pos:
                 break
             index += 1
 
-        self.game_state[index].move(new_pos, self.game_state)
+        #Checks that the move is inside the play area
+        if new_pos.x <= 8 and new_pos.x >= 1 and new_pos.y <= 8 and new_pos.y >= 1:
+            self.game_state[index].move(new_pos, self.game_state) 
