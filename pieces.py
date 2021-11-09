@@ -24,6 +24,26 @@ class Pieces:
                         list.remove(pieces)
                 self.position = cord
                 break
+    
+    def QRB_move(self, available_moves, pieces_on_same_lane, move_dir):
+        for dir in move_dir:
+            for scalar in range(1, 9):
+                check = dir.dir_scale(scalar, self.position)
+                for piece in pieces_on_same_lane:
+                    if piece.position == check:
+                        if piece.color == self.color:
+                            break
+                        available_moves.append(check)
+                        break
+                else:
+                    available_moves.append(check)
+                    continue
+                break
+            else:
+                continue
+            break
+
+        return available_moves
 
 class Pawn(Pieces):
 
@@ -80,20 +100,27 @@ class Pawn(Pieces):
 
         self.piece_take(cord, list, available_moves)
 
+#TODO fixa nya funktionenen sen ta bort rook_move
 class Rook(Pieces):
     def move(self, cord, list):
         available_moves = []
         pieces_on_same_lane = []
+        move_dir = (Position(1, 0),
+                    Position(-1, 0),
+                    Position(0, 1),
+                    Position(0, -1))
+        
+        for pieces in list:
+            if pieces.position.x == self.position.x or pieces.position.y  == self.position.y:
+                pieces_on_same_lane.append(pieces)
 
-        available_moves = self.rook_move(cord, list, available_moves, pieces_on_same_lane)
+        available_moves = self.QRB_move(available_moves, pieces_on_same_lane, move_dir)
+        #available_moves = self.rook_move(cord, list, available_moves, pieces_on_same_lane)
 
         self.piece_take(cord, list, available_moves)
     
+    #Kan antagligen förenklas till att mulipliceras med vektor och då göra moves till Q R B
     def rook_move(self, cord, list, available_moves, pieces_on_same_lane):
-        for pieces in list:
-            if pieces.position.x == cord.x or pieces.position.y == cord.y:
-                pieces_on_same_lane.append(pieces)
-
         for x in range(1, 9):
             for piece in pieces_on_same_lane:
                 if piece.position == Position((self.position.x + x), (self.position.y)):
@@ -101,7 +128,10 @@ class Rook(Pieces):
                         break
                     available_moves.append(Position((self.position.x + x), (self.position.y)))
                     break
-            available_moves.append(Position((self.position.x + x), (self.position.y)))
+            else:
+                available_moves.append(Position((self.position.x + x), (self.position.y)))
+                continue
+            break
 
         for x in range(1, 9):
             for piece in pieces_on_same_lane:
@@ -110,7 +140,10 @@ class Rook(Pieces):
                         break
                     available_moves.append(Position((self.position.x - x), (self.position.y)))
                     break
-            available_moves.append(Position((self.position.x - x), (self.position.y)))
+            else:
+                available_moves.append(Position((self.position.x - x), (self.position.y)))
+                continue
+            break
         
         for y in range(1, 9):
             for piece in pieces_on_same_lane:
@@ -119,7 +152,10 @@ class Rook(Pieces):
                         break
                     available_moves.append(Position((self.position.x), (self.position.y + y)))
                     break
-            available_moves.append(Position((self.position.x), (self.position.y + y)))
+            else:
+                available_moves.append(Position((self.position.x), (self.position.y + y)))
+                continue
+            break
 
         for y in range(1, 9):
             for piece in pieces_on_same_lane:
@@ -128,14 +164,24 @@ class Rook(Pieces):
                         break
                     available_moves.append(Position((self.position.x), (self.position.y - y)))
                     break
-            available_moves.append(Position((self.position.x), (self.position.y - y)))
+            else:
+                available_moves.append(Position((self.position.x), (self.position.y - y)))
+                continue
+            break
         
         return available_moves
 
 class Bishop(Pieces):
     def move(self, cord, list):
         available_moves = []
-        self.position = cord
+        pieces_on_same_lane = list
+        move_dir = (Position(1, 1),
+                    Position(1, -1),
+                    Position(-1, 1),
+                    Position(-1, -1))
+
+        available_moves = self.QRB_move(available_moves, pieces_on_same_lane, move_dir)
+        self.piece_take(cord, list, available_moves)
 
 class Knight(Pieces):
     def move(self, cord, list):

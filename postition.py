@@ -13,6 +13,9 @@ class Position:
         if (isinstance(other, Position)):
             return self.x == other.x and self.y == other.y
 
+    def dir_scale(self, scalar, org_pos):
+        return Position((self.x * scalar + org_pos.x),(self.y * scalar+ org_pos.y))
+
 
     @staticmethod
     def chess_notation_to_cord(str):
