@@ -4,7 +4,7 @@ class Position:
         self.y = y
 
     def __str__(self):
-        return "x = {}, y =  {}".format(self.x, self.y)
+        return "x = {:2}, y =  {:2}".format(self.x, self.y)
 
     def convert_coordinates(self):
         return self.x + ((self.y - 1) * 8) - 1
@@ -29,3 +29,5 @@ class Position:
 
         return Position(cord, int(str[1]))
 
+if __name__ == "__main__":
+    import main

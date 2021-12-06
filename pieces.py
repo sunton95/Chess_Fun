@@ -29,6 +29,8 @@ class Pieces:
         for dir in move_dir:
             for scalar in range(1, 9):
                 check = dir.dir_scale(scalar, self.position)
+                if(check.x > 8 or check.y > 8 or check.x < 1 or check.y < 1):
+                    continue
                 for piece in pieces_on_same_lane:
                     if piece.position == check:
                         if piece.color == self.color:
@@ -42,7 +44,8 @@ class Pieces:
             else:
                 continue
             break
-
+        for x in available_moves:
+            print(x)
         return available_moves
 
 class Pawn(Pieces):
@@ -188,13 +191,10 @@ class Knight(Pieces):
         available_moves = []
         available_moves.append(Position((self.position.x + 1), (self.position.y + 2)))
         available_moves.append(Position((self.position.x + 2), (self.position.y + 1)))
-
         available_moves.append(Position((self.position.x - 1), (self.position.y + 2)))
         available_moves.append(Position((self.position.x - 2), (self.position.y + 1)))
-
         available_moves.append(Position((self.position.x - 1), (self.position.y - 2)))
         available_moves.append(Position((self.position.x - 2), (self.position.y - 1)))
-
         available_moves.append(Position((self.position.x + 1), (self.position.y - 2)))
         available_moves.append(Position((self.position.x + 2), (self.position.y - 1)))
 
@@ -220,3 +220,7 @@ class Queen(Pieces):
     def move(self, cord, list):
         available_moves = []
         self.position = cord
+
+
+if __name__ == "__main__":
+    import main
