@@ -28,25 +28,29 @@ class Pieces:
     def QRB_move(self, available_moves, pieces_on_same_lane, move_dir):
         for dir in move_dir:
             for scalar in range(1, 9):
-                check = dir.dir_scale(scalar, self.position)
-                if(check.x > 8 or check.y > 8 or check.x < 1 or check.y < 1):
-                    continue
-                for piece in pieces_on_same_lane:
-                    if piece.position == check:
-                        if piece.color == self.color:
-                            break
-                        available_moves.append(check)
-                        break
+                check_if_valid = dir.dir_scale(scalar, self.position)
+
+                if(check_if_valid.x > 8 or check_if_valid.y > 8 or check_if_valid.x < 1 or check_if_valid.y < 1):
+                    break
+                flag = self.check_occupied(available_moves, pieces_on_same_lane, check_if_valid)
+
+                if(flag == True):
+                    available_moves.append(check_if_valid)
                 else:
-                    available_moves.append(check)
-                    continue
-                break
-            else:
-                continue
-            break
-        for x in available_moves:
-            print(x)
+                    break
+
         return available_moves
+
+    def check_occupied(self, available_moves, pieces_on_same_lane, check_if_valid):
+        for piece in pieces_on_same_lane:
+            if piece.position == check_if_valid:
+                if piece.color == self.color:
+                    return False
+                if piece.color != self.color:
+                    available_moves.append(check_if_valid)
+                    return False
+        return True
+        
 
 class Pawn(Pieces):
 
@@ -182,6 +186,7 @@ class Bishop(Pieces):
                     Position(1, -1),
                     Position(-1, 1),
                     Position(-1, -1))
+
 
         available_moves = self.QRB_move(available_moves, pieces_on_same_lane, move_dir)
         self.piece_take(cord, list, available_moves)
