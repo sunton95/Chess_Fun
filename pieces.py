@@ -49,8 +49,7 @@ class Pieces:
                 if piece.color != self.color:
                     available_moves.append(check_if_valid)
                     return False
-        return True
-        
+        return True    
 
 class Pawn(Pieces):
 
@@ -177,7 +176,6 @@ class Queen(Pieces):
 
             available_moves = self.QRB_move(available_moves, pieces_on_same_lane, move_dir)
             self.piece_take(cord, list, available_moves)
-
 
 if __name__ == "__main__":
     import main
