@@ -55,6 +55,7 @@ class GameBoard:
 
         #Return True if black to move and false if White move
 
+    #Checks if a piece is clicked if it is it wont be drawn at its location. That pieces drawing is handled by draw_drag function
     def draw_pieces(self, screen, selected_piece):
         for pieces in self.game_state:
             if pieces != selected_piece:
@@ -62,7 +63,7 @@ class GameBoard:
                 y = 700 - ((pieces.position.y - 1) * 100)
                 screen.blit(pieces.image, (x, y))
 
-
+    #Loads each piece image and resizes it to 100px and returns a list with all images
     def init_images(self):
         images = []
 
@@ -151,6 +152,7 @@ class GameBoard:
         #Add function that looks for check
         #TODO add a function that makes sure the move does not generate a check on self
 
+        #Shifts eo each player take one turn each. White begins
         if ((self.move_number) % 2) == 0:
             if (selected_piece.color == "White"):
                 selected_piece.move(new_pos, self.game_state) 
@@ -162,8 +164,8 @@ class GameBoard:
 
 def draw_background(screen):
     # Initialing Color for each square
-    ch_1 = (118,150,86)
-    ch_2 = (238,238,210)
+    ch_1 = (238,238,210)
+    ch_2 = (118,150,86)
     
     for x in range(0, 8):
         for y in range(0, 8):
@@ -172,6 +174,7 @@ def draw_background(screen):
             else:
                 pygame.draw.rect(screen, ch_2, pygame.Rect((y * 100), (x * 100), 100, 100))
 
+#Gets a piece on the board
 def get_square_under_mouse(game_state):
     mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
     x = int((mouse_pos[0] // 100) + 1)
@@ -182,12 +185,15 @@ def get_square_under_mouse(game_state):
     return None
 
 def draw_drag(screen, selected_piece, game_state):
+    #Get the cordinate of the mouse so we know were the piece is dropped
     mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
     x = int((mouse_pos[0] // 100) + 1)
     y = int(7 - (mouse_pos[1] // 100) + 1)
     
+    #If a pieces is clicked the aviLble moves will be lit up and posistion of the clicked piece updated
     if selected_piece:
         if selected_piece.position.x != None:
+            #Calculates the pixel location of the chess cordinates for drawing on game area
             pos_x = (selected_piece.position.x - 1 ) * 100
             pos_y = 700 - ((selected_piece.position.y - 1) * 100)
             rect = (pos_x, pos_y, 100, 100)
@@ -201,6 +207,7 @@ def draw_drag(screen, selected_piece, game_state):
             s.fill((255,0,0,128))                         # notice the alpha value in the color
             screen.blit(s, (((move.x - 1) * 100), ((700 - (move.y - 1) * 100))))
 
+    #Returns a position where the mouse is and if the mouseclick is up it will be the new move
     return Position(x, y)
 
 if __name__ == "__main__":
