@@ -80,7 +80,6 @@ class Pawn(Pieces):
             for move in available_moves:
                 if pieces.position == Position(self.position.x, (self.position.y + 1)):
                     available_moves.remove(Position(self.position.x, (self.position.y + 1)))
-                    available_moves.remove(Position(self.position.x, (self.position.y + 2)))
                 elif move == pieces.position and self.color == pieces.color:
                     available_moves.remove(move)
 

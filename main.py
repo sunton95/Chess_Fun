@@ -36,6 +36,5 @@ while(1):
     drop_pos = draw_drag(screen, selected_piece, b1.game_state)
     b1.draw_pieces(screen, selected_piece)
 
-    print(selected_piece)
     pygame.display.update()
     pygame.time.delay(33)
