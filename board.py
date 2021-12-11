@@ -1,12 +1,15 @@
+from pygame import image
 from pieces import *
 import os
+import pygame
 
 class GameBoard:
-    def __init__(self):
+    def __init__(self, move_number):
         self.game_state = []
         self.position_list = []
+        self.move_number = move_number
 
-    def board_setup(self, FEN_string):
+    def board_setup(self, FEN_string, images):
         FEN_string  = FEN_string.split(' ')
         pieces_on_board = FEN_string[0]
 
@@ -17,29 +20,29 @@ class GameBoard:
 
         for pieces in pieces_on_board:
             if pieces == 'P':
-                self.game_state.append(Pawn("White", index, "P")) 
+                self.game_state.append(Pawn("White", index, "P", images[6])) 
             elif pieces == 'R':
-                self.game_state.append(Rook("White", index, "R"))
+                self.game_state.append(Rook("White", index, "R", images[8]))
             elif pieces == 'N':
-                self.game_state.append(Knight("White", index, "N"))
+                self.game_state.append(Knight("White", index, "N", images[7]))
             elif pieces == 'B':
-                self.game_state.append(Bishop("White", index, "B"))
+                self.game_state.append(Bishop("White", index, "B", images[9]))
             elif pieces == 'Q':
-                self.game_state.append(Queen("White", index, "Q"))
+                self.game_state.append(Queen("White", index, "Q", images[10]))
             elif pieces == 'K':
-                self.game_state.append(King("White", index, "K")) 
+                self.game_state.append(King("White", index, "K", images[11])) 
             elif pieces == 'p':
-                self.game_state.append(Pawn("Black", index, "p"))
+                self.game_state.append(Pawn("Black", index, "p", images[0]))
             elif pieces == 'r':
-                self.game_state.append(Rook("Black", index, "r")) 
+                self.game_state.append(Rook("Black", index, "r", images[2])) 
             elif pieces == 'n':
-                self.game_state.append(Knight("Black", index, "n"))         
+                self.game_state.append(Knight("Black", index, "n", images[1]))         
             elif pieces == 'b':
-                self.game_state.append(Bishop("Black", index, "b")) 
+                self.game_state.append(Bishop("Black", index, "b", images[3])) 
             elif pieces == 'q':
-                self.game_state.append(Queen("Black", index, "q")) 
+                self.game_state.append(Queen("Black", index, "q", images[4])) 
             elif pieces == 'k':
-                self.game_state.append(King("Black", index, "k"))  
+                self.game_state.append(King("Black", index, "k", images[5]))  
             
 
             if pieces == "/":
@@ -52,8 +55,69 @@ class GameBoard:
 
         #Return True if black to move and false if White move
 
+    def draw_pieces(self, screen, selected_piece):
+        for pieces in self.game_state:
+            if pieces != selected_piece:
+                x = (pieces.position.x - 1) * 100
+                y = 700 - ((pieces.position.y - 1) * 100)
+                screen.blit(pieces.image, (x, y))
 
-    def draw_board(self):
+
+    def init_images(self):
+        images = []
+
+        black_pawn = pygame.image.load('images/black_pawn.png').convert_alpha()
+        black_pawn = pygame.transform.scale(black_pawn, (100, 100))
+
+        black_knight = pygame.image.load('images/black_knight.png').convert_alpha()
+        black_knight = pygame.transform.scale(black_knight, (100, 100))
+
+        black_rook = pygame.image.load('images/black_rook.png').convert_alpha()
+        black_rook = pygame.transform.scale(black_rook, (100, 100))
+
+        black_bishop = pygame.image.load('images/black_bishop.png').convert_alpha()
+        black_bishop = pygame.transform.scale(black_bishop, (100, 100))
+
+        black_queen = pygame.image.load('images/black_queen.png').convert_alpha()
+        black_queen = pygame.transform.scale(black_queen, (100, 100))
+
+        black_king = pygame.image.load('images/black_king.png').convert_alpha()
+        black_king = pygame.transform.scale(black_king, (100, 100))
+
+        white_pawn = pygame.image.load('images/white_pawn.png').convert_alpha()
+        white_pawn = pygame.transform.scale(white_pawn, (100, 100))
+
+        white_knight = pygame.image.load('images/white_knight.png').convert_alpha()
+        white_knight = pygame.transform.scale(white_knight, (100, 100))
+
+        white_rook = pygame.image.load('images/white_rook.png').convert_alpha()
+        white_rook = pygame.transform.scale(white_rook, (100, 100))
+
+        white_bishop = pygame.image.load('images/white_bishop.png').convert_alpha()
+        white_bishop = pygame.transform.scale(white_bishop, (100, 100))
+
+        white_queen = pygame.image.load('images/white_queen.png').convert_alpha()
+        white_queen = pygame.transform.scale(white_queen, (100, 100))
+
+        white_king = pygame.image.load('images/white_king.png').convert_alpha()
+        white_king = pygame.transform.scale(white_king, (100, 100))
+
+        images.append(black_pawn)
+        images.append(black_knight)
+        images.append(black_rook)
+        images.append(black_bishop)
+        images.append(black_queen)
+        images.append(black_king)
+        images.append(white_pawn)
+        images.append(white_knight)
+        images.append(white_rook)
+        images.append(white_bishop)
+        images.append(white_queen)
+        images.append(white_king)
+
+        return images
+
+    def draw_board_terminal(self):
         #Clears the terminal before printing a new frame of the game
         os.system('cls||clear')
 
@@ -80,20 +144,64 @@ class GameBoard:
         print("|{}|{}|{}|{}|{}|{}|{}|{}|".format("A","B","C","D","E","F","G", "H"))
         print("")
     
-    def move_piece(self, cord1, cord2):
-        org_pos = Position.chess_notation_to_cord(cord1)
-        new_pos = Position.chess_notation_to_cord(cord2)
+    #Position input
+    def move_piece(self, org_pos, new_pos, selected_piece):
         index = 0
 
         #Add function that looks for check
         #TODO add a function that makes sure the move does not generate a check on self
 
-        #Finds if there is a piece on the selected square
-        for pieces in self.game_state:
-            if pieces.position == org_pos:
-                break
-            index += 1
+        if ((self.move_number) % 2) == 0:
+            if (selected_piece.color == "White"):
+                selected_piece.move(new_pos, self.game_state) 
+                self.move_number += 1
+        elif((self.move_number) % 2) == 1:
+            if (selected_piece.color == "Black"):
+                selected_piece.move(new_pos, self.game_state) 
+                self.move_number += 1
 
-        #Checks that the move is inside the play area
-        if new_pos.x <= 8 and new_pos.x >= 1 and new_pos.y <= 8 and new_pos.y >= 1:
-            self.game_state[index].move(new_pos, self.game_state) 
+def draw_background(screen):
+    # Initialing Color for each square
+    ch_1 = (118,150,86)
+    ch_2 = (238,238,210)
+    
+    for x in range(0, 8):
+        for y in range(0, 8):
+            if ((y + x) % 2) == 0:
+                pygame.draw.rect(screen, ch_1, pygame.Rect((y * 100), (x * 100), 100, 100))
+            else:
+                pygame.draw.rect(screen, ch_2, pygame.Rect((y * 100), (x * 100), 100, 100))
+
+def get_square_under_mouse(game_state):
+    mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
+    x = int((mouse_pos[0] // 100) + 1)
+    y = int(7 - (mouse_pos[1] // 100) + 1)
+    for piece in game_state:
+        if piece.position == Position(x, y):
+            return piece
+    return None
+
+def draw_drag(screen, selected_piece, game_state):
+    mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
+    x = int((mouse_pos[0] // 100) + 1)
+    y = int(7 - (mouse_pos[1] // 100) + 1)
+    
+    if selected_piece:
+        if selected_piece.position.x != None:
+            pos_x = (selected_piece.position.x - 1 ) * 100
+            pos_y = 700 - ((selected_piece.position.y - 1) * 100)
+            rect = (pos_x, pos_y, 100, 100)
+            pygame.draw.rect(screen, (0, 255, 0, 50), rect, 2)
+    
+        screen.blit(selected_piece.image, ((mouse_pos[0] - 50), (mouse_pos[1] - 50)))
+
+        avilable_moves = selected_piece.move(None, game_state)
+        for move in avilable_moves:
+            s = pygame.Surface((100,100), pygame.SRCALPHA)   # per-pixel alpha
+            s.fill((255,0,0,128))                         # notice the alpha value in the color
+            screen.blit(s, (((move.x - 1) * 100), ((700 - (move.y - 1) * 100))))
+
+    return Position(x, y)
+
+if __name__ == "__main__":
+    import main

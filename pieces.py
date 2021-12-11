@@ -2,10 +2,13 @@ from os import stat
 from postition import *
 
 class Pieces:
-    def __init__(self, color, position, label):
+    def __init__(self, color, position, label, image):
         self.color = color
         self.position = Position(position[0], position[1])
         self.label = label
+        self.image = image
+        self.click = False
+
 
     def __str__(self):
         return "{} {}".format(self.color, self.position)
@@ -17,13 +20,14 @@ class Pieces:
                     available_moves.remove(move)
 
     def piece_take(self, cord, list, available_moves):
-        for move in available_moves:
-            if move == cord:
-                for pieces in list:
-                    if pieces.position == move:
-                        list.remove(pieces)
-                self.position = cord
-                break
+        if cord != None:
+            for move in available_moves:
+                if move == cord:
+                    for pieces in list:
+                        if pieces.position == move:
+                            list.remove(pieces)
+                    self.position = cord
+                    break
     
     def QRB_move(self, available_moves, pieces_on_same_lane, move_dir):
         for dir in move_dir:
@@ -55,9 +59,9 @@ class Pawn(Pieces):
 
     def move(self, cord, list):
         if self.color == "White":
-            self.pawn_move_white(cord, list)
+            return self.pawn_move_white(cord, list)
         elif self.color == "Black":
-            self.pawn_move_black(cord, list)
+            return self.pawn_move_black(cord, list)
 
     def pawn_move_white(self, cord, list):
         available_moves = []
@@ -80,9 +84,8 @@ class Pawn(Pieces):
                 elif move == pieces.position and self.color == pieces.color:
                     available_moves.remove(move)
 
-                
-
         self.piece_take(cord, list, available_moves)
+        return available_moves
 
     def pawn_move_black(self, cord, list):
         available_moves = []
@@ -105,6 +108,7 @@ class Pawn(Pieces):
                     available_moves.remove(Position(self.position.x, (self.position.y - 1)))
 
         self.piece_take(cord, list, available_moves)
+        return available_moves
 
 class Rook(Pieces):
     def move(self, cord, list):
@@ -117,6 +121,7 @@ class Rook(Pieces):
 
         available_moves = self.QRB_move(available_moves, pieces_on_same_lane, move_dir)
         self.piece_take(cord, list, available_moves) 
+        return available_moves
     
 class Bishop(Pieces):
     def move(self, cord, list):
@@ -130,6 +135,7 @@ class Bishop(Pieces):
 
         available_moves = self.QRB_move(available_moves, pieces_on_same_lane, move_dir)
         self.piece_take(cord, list, available_moves)
+        return available_moves
 
 class Knight(Pieces):
     def move(self, cord, list):
@@ -145,6 +151,7 @@ class Knight(Pieces):
 
         self.find_freindly(list, available_moves)
         self.piece_take(cord, list, available_moves)
+        return available_moves
 
 class King(Pieces):
     def move(self, cord, list):
@@ -160,6 +167,7 @@ class King(Pieces):
 
         self.find_freindly(list, available_moves)
         self.piece_take(cord, list, available_moves)
+        return available_moves
 
 class Queen(Pieces):
         def move(self, cord, list):
@@ -176,6 +184,7 @@ class Queen(Pieces):
 
             available_moves = self.QRB_move(available_moves, pieces_on_same_lane, move_dir)
             self.piece_take(cord, list, available_moves)
+            return available_moves
 
 if __name__ == "__main__":
     import main
