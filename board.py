@@ -1,7 +1,17 @@
+# =============================================================================
+# Created By  : Anton Sundqvist
+# Created Date: 2021-12-13
+""""""
+# =============================================================================
+# TODO
+#
+# =============================================================================
+# Imports
 from pygame import image
 from pieces import *
 import os
 import pygame
+# =============================================================================
 
 class GameBoard:
     def __init__(self, move_number):
@@ -52,7 +62,8 @@ class GameBoard:
                 index[0] = int(pieces)
             else:
                 index[0] += 1
-
+        #TODO
+        #Add casteling, add en passant check
         #Return True if black to move and false if White move
 
     #Checks if a piece is clicked if it is it wont be drawn at its location. That pieces drawing is handled by draw_drag function
@@ -146,10 +157,19 @@ class GameBoard:
         print("")
     
     #Position input
-    def move_piece(self, org_pos, new_pos, selected_piece):
+    def move_piece(self, new_pos, selected_piece):
         index = 0
 
+        #If the piece dont move cancel the action
+        if selected_piece.position == new_pos:
+            return None
+
         #Add function that looks for check
+        check_flag = False
+        #check_flag = check_for_check(selected_piece)
+        if check_flag == True:
+            return None
+
         #TODO add a function that makes sure the move does not generate a check on self
 
         #Shifts eo each player take one turn each. White begins
