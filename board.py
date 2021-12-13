@@ -26,14 +26,14 @@ class GameBoard:
         self.game_state = []
         self.position_list = []
         self.move_number = move_number
-        self.flags = Flags(False, False, False, False, None)
+        self.flags = Flags(False, False, False, False)
 
     #Uses the FEN foramting to set the board and initilize the flags indicating casteling and en passant
     def board_setup(self, FEN_string, images):
         pieces_on_board, side_to_move, casteling_ability, enpassant_target, half_clock, full_clock = FEN_string.split(' ')
 
         if(enpassant_target != '-'):
-            self.flags.en_passant_target = Position.chess_notation_to_cord(enpassant_target)
+            Pawn.en_passant_target = Position.chess_notation_to_cord(enpassant_target)
         
         self.initialize_casteling(casteling_ability)
         self.initialize_move_number(side_to_move, half_clock, full_clock)

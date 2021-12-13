@@ -12,55 +12,33 @@ from postition import Position
 # =============================================================================
 
 class Pawn(Pieces):
+    en_passant_target = None
 
-    def move(self, cord, list):
+    def move(self, cord, game_state):
         if self.color == "White":
-            return self.pawn_move_white(cord, list)
+            moves = [Position(0, 1),
+                     Position(1, 1),
+                     Position(-1, 1),
+                    ]
+            if(self.position.y == 2):
+                moves.append(Position(0,2))
+
+            return self.pawn_move(cord, list, moves)     
         elif self.color == "Black":
-            return self.pawn_move_black(cord, list)
+            moves = [Position(0, -1),
+                     Position(1, -1),
+                     Position(-1, -1),
+                    ]
+            if(self.position.y == 7):
+                moves.append(Position(0,-2))
 
-    def pawn_move_white(self, cord, list):
+            return self.pawn_move(cord, list, moves)
+
+    def pawn_move(self, cord, list, moves):
         available_moves = []
-        available_moves.append(Position(self.position.x, (self.position.y + 1)))
-
-        if self.position.y == 2:
-            available_moves.append(Position(self.position.x, (self.position.y + 2)))
         
-        #Looking for if there are pieces in places that white can take
-        for pieces in list:
-            if pieces.position == Position((self.position.x + 1), (self.position.y + 1)) and pieces.color != self.color:
-                available_moves.append(Position((self.position.x + 1), (self.position.y + 1)))
-            elif pieces.position == Position((self.position.x - 1), (self.position.y + 1)) and pieces.color != self.color:
-                available_moves.append(Position((self.position.x - 1), (self.position.y + 1)))
-
-            for move in available_moves:
-                if pieces.position == Position(self.position.x, (self.position.y + 1)):
-                    available_moves.remove(Position(self.position.x, (self.position.y + 1)))
-                elif move == pieces.position and self.color == pieces.color:
-                    available_moves.remove(move)
-
-        self.piece_take(cord, list, available_moves)
-        return available_moves
-    
-    def pawn_move_black(self, cord, list):
-        available_moves = []
-        available_moves.append(Position(self.position.x, (self.position.y - 1)))
-
-        if self.position.y == 7:
-            available_moves.append(Position(self.position.x, (self.position.y - 2)))
-
-        #Looking for if there are pieces in places that black can take
-        for pieces in list:
-            if pieces.position == Position((self.position.x - 1), (self.position.y - 1)) and pieces.color != self.color:
-                available_moves.append(Position((self.position.x - 1), (self.position.y - 1)))
-            elif pieces.position == Position((self.position.x + 1), (self.position.y - 1)) and pieces.color != self.color:
-                available_moves.append(Position((self.position.x + 1), (self.position.y - 1)))
-            
-            for move in available_moves:
-                if move == pieces.position and self.color == pieces.color:
-                    available_moves.remove(move)
-                elif pieces.position == Position(self.position.x, (self.position.y - 1)):
-                    available_moves.remove(Position(self.position.x, (self.position.y - 1)))
+        for move in moves:
+            available_moves.append(Position((self.position.x + move.x), (self.position.y + move.y)))
 
         self.piece_take(cord, list, available_moves)
         return available_moves

@@ -18,8 +18,6 @@ class Pieces:
         self.position = Position(position[0], position[1])
         self.label = label
         self.image = image
-        self.click = False
-
 
     def __str__(self):
         return "{} {}".format(self.color, self.position)
