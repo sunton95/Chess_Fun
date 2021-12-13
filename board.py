@@ -1,14 +1,21 @@
 # =============================================================================
 # Created By  : Anton Sundqvist
 # Created Date: 2021-12-13
-""""""
+"""This fiel has the functions of drawing the game on the GUI and initilize the 
+setup of the game. """
 # =============================================================================
 # TODO
 #
 # =============================================================================
 # Imports
 from pygame import image
-from pieces import *
+from pieces.bishop import *
+from pieces.king import *
+from pieces.queen import *
+from pieces.knight import *
+from pieces.pawn import *
+from pieces.rook import *
+from postition import Position
 import os
 import pygame
 # =============================================================================
@@ -129,6 +136,45 @@ class GameBoard:
 
         return images
 
+    def draw_background(self, screen):
+        # Initialing Color for each square
+        ch_1 = (238,238,210)
+        ch_2 = (118,150,86)
+        
+        for x in range(0, 8):
+            for y in range(0, 8):
+                if ((y + x) % 2) == 0:
+                    pygame.draw.rect(screen, ch_1, pygame.Rect((y * 100), (x * 100), 100, 100))
+                else:
+                    pygame.draw.rect(screen, ch_2, pygame.Rect((y * 100), (x * 100), 100, 100))
+
+    def draw_drag(self, screen, selected_piece, game_state):
+        #Get the cordinate of the mouse so we know were the piece is dropped
+        mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
+        x = int((mouse_pos[0] // 100) + 1)
+        y = int(7 - (mouse_pos[1] // 100) + 1)
+        
+        #If a pieces is clicked the aviLble moves will be lit up and posistion of the clicked piece updated
+        if selected_piece:
+            if selected_piece.position.x != None:
+                #Calculates the pixel location of the chess cordinates for drawing on game area
+                pos_x = (selected_piece.position.x - 1 ) * 100
+                pos_y = 700 - ((selected_piece.position.y - 1) * 100)
+                rect = (pos_x, pos_y, 100, 100)
+                pygame.draw.rect(screen, (0, 255, 0, 50), rect, 2)
+        
+            screen.blit(selected_piece.image, ((mouse_pos[0] - 50), (mouse_pos[1] - 50)))
+
+            avilable_moves = selected_piece.move(None, game_state)
+            for move in avilable_moves:
+                s = pygame.Surface((100,100), pygame.SRCALPHA)   # per-pixel alpha
+                s.fill((255,0,0,128))                         # notice the alpha value in the color
+                screen.blit(s, (((move.x - 1) * 100), ((700 - (move.y - 1) * 100))))
+
+        #Returns a position where the mouse is and if the mouseclick is up it will be the new move
+        return Position(x, y)
+
+    #Function for drawing the game in terminal and ignoring the GUI. Not used as of now
     def draw_board_terminal(self):
         #Clears the terminal before printing a new frame of the game
         os.system('cls||clear')
@@ -143,92 +189,18 @@ class GameBoard:
         for x in range(1,9):
             i = 8 * (x - 1)
             print("|{}|{}|{}|{}|{}|{}|{}|{}|  {}".format(self.position_list[56 - i],
-                                                         self.position_list[57 - i],
-                                                         self.position_list[58 - i],
-                                                         self.position_list[59 - i],
-                                                         self.position_list[60 - i],
-                                                         self.position_list[61 - i],
-                                                         self.position_list[62 - i],
-                                                         self.position_list[63 - i],                                                   
-                                                         (9 - x)))
+                                                            self.position_list[57 - i],
+                                                            self.position_list[58 - i],
+                                                            self.position_list[59 - i],
+                                                            self.position_list[60 - i],
+                                                            self.position_list[61 - i],
+                                                            self.position_list[62 - i],
+                                                            self.position_list[63 - i],                                                   
+                                                            (9 - x)))
 
         print("")
         print("|{}|{}|{}|{}|{}|{}|{}|{}|".format("A","B","C","D","E","F","G", "H"))
         print("")
-    
-    #Position input
-    def move_piece(self, new_pos, selected_piece):
-        index = 0
-
-        #If the piece dont move cancel the action
-        if selected_piece.position == new_pos:
-            return None
-
-        #Add function that looks for check
-        check_flag = False
-        #check_flag = check_for_check(selected_piece)
-        if check_flag == True:
-            return None
-
-        #TODO add a function that makes sure the move does not generate a check on self
-
-        #Shifts eo each player take one turn each. White begins
-        if ((self.move_number) % 2) == 0:
-            if (selected_piece.color == "White"):
-                selected_piece.move(new_pos, self.game_state) 
-                self.move_number += 1
-        elif((self.move_number) % 2) == 1:
-            if (selected_piece.color == "Black"):
-                selected_piece.move(new_pos, self.game_state) 
-                self.move_number += 1
-
-def draw_background(screen):
-    # Initialing Color for each square
-    ch_1 = (238,238,210)
-    ch_2 = (118,150,86)
-    
-    for x in range(0, 8):
-        for y in range(0, 8):
-            if ((y + x) % 2) == 0:
-                pygame.draw.rect(screen, ch_1, pygame.Rect((y * 100), (x * 100), 100, 100))
-            else:
-                pygame.draw.rect(screen, ch_2, pygame.Rect((y * 100), (x * 100), 100, 100))
-
-#Gets a piece on the board
-def get_square_under_mouse(game_state):
-    mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
-    x = int((mouse_pos[0] // 100) + 1)
-    y = int(7 - (mouse_pos[1] // 100) + 1)
-    for piece in game_state:
-        if piece.position == Position(x, y):
-            return piece
-    return None
-
-def draw_drag(screen, selected_piece, game_state):
-    #Get the cordinate of the mouse so we know were the piece is dropped
-    mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
-    x = int((mouse_pos[0] // 100) + 1)
-    y = int(7 - (mouse_pos[1] // 100) + 1)
-    
-    #If a pieces is clicked the aviLble moves will be lit up and posistion of the clicked piece updated
-    if selected_piece:
-        if selected_piece.position.x != None:
-            #Calculates the pixel location of the chess cordinates for drawing on game area
-            pos_x = (selected_piece.position.x - 1 ) * 100
-            pos_y = 700 - ((selected_piece.position.y - 1) * 100)
-            rect = (pos_x, pos_y, 100, 100)
-            pygame.draw.rect(screen, (0, 255, 0, 50), rect, 2)
-    
-        screen.blit(selected_piece.image, ((mouse_pos[0] - 50), (mouse_pos[1] - 50)))
-
-        avilable_moves = selected_piece.move(None, game_state)
-        for move in avilable_moves:
-            s = pygame.Surface((100,100), pygame.SRCALPHA)   # per-pixel alpha
-            s.fill((255,0,0,128))                         # notice the alpha value in the color
-            screen.blit(s, (((move.x - 1) * 100), ((700 - (move.y - 1) * 100))))
-
-    #Returns a position where the mouse is and if the mouseclick is up it will be the new move
-    return Position(x, y)
 
 if __name__ == "__main__":
     import main
