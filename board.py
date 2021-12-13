@@ -5,7 +5,7 @@
 setup of the game. """
 # =============================================================================
 # TODO
-#
+#Add casteling, add en passant check
 # =============================================================================
 # Imports
 from pygame import image
@@ -16,6 +16,7 @@ from pieces.knight import *
 from pieces.pawn import *
 from pieces.rook import *
 from postition import Position
+from flags import Flags
 import os
 import pygame
 # =============================================================================
@@ -25,15 +26,41 @@ class GameBoard:
         self.game_state = []
         self.position_list = []
         self.move_number = move_number
+        self.flags = Flags(False, False, False, False, None)
 
+    #Uses the FEN foramting to set the board and initilize the flags indicating casteling and en passant
     def board_setup(self, FEN_string, images):
-        FEN_string  = FEN_string.split(' ')
-        pieces_on_board = FEN_string[0]
+        pieces_on_board, side_to_move, casteling_ability, enpassant_target, half_clock, full_clock = FEN_string.split(' ')
 
+        if(enpassant_target != '-'):
+            self.flags.en_passant_target = Position.chess_notation_to_cord(enpassant_target)
+        
+        self.initialize_casteling(casteling_ability)
+        self.initialize_move_number(side_to_move, half_clock, full_clock)
+        self.initilize_pieces(images, pieces_on_board)
+
+    def initialize_casteling(self, casteling_ability):
+        for char in casteling_ability:
+            if(char == 'K'):
+                self.flags.white_king_side_castling = True
+            elif(char == 'Q'):
+                self.flags.white_queen_side_castling = True
+            elif(char == 'k'):
+                self.flags.black_king_side_castling = True
+            elif(char == 'q'):
+                self.flags.black_queen_side_castling = True
+
+    def initialize_move_number(self, side_to_move, half_clock, full_clock):
+        move = int(full_clock)
+        move = move * 2
+
+        if side_to_move == 'w':
+            self.move_number = move - 1
+        elif side_to_move == 'b':
+            self.move_number = move
+    
+    def initilize_pieces(self, images, pieces_on_board):
         index = [1, 8]
-
-        for x in range(0, 65):
-            self.position_list.append(" ")
 
         for pieces in pieces_on_board:
             if pieces == 'P':
@@ -60,18 +87,14 @@ class GameBoard:
                 self.game_state.append(Queen("Black", index, "q", images[4])) 
             elif pieces == 'k':
                 self.game_state.append(King("Black", index, "k", images[5]))  
-            
 
             if pieces == "/":
                 index[1] -= 1
                 index[0] = 1
             elif pieces.isdigit() == True:
-                index[0] = int(pieces)
+                index[0] = int(pieces) + index[0]
             else:
                 index[0] += 1
-        #TODO
-        #Add casteling, add en passant check
-        #Return True if black to move and false if White move
 
     #Checks if a piece is clicked if it is it wont be drawn at its location. That pieces drawing is handled by draw_drag function
     def draw_pieces(self, screen, selected_piece):
@@ -178,6 +201,10 @@ class GameBoard:
     def draw_board_terminal(self):
         #Clears the terminal before printing a new frame of the game
         os.system('cls||clear')
+
+        #Creates an empty list of all the positions on the board
+        for x in range(0, 65):
+            self.position_list.append(" ")
 
         #Fills the list with empty placeholders and adds the chess pieces location to the list
         for x in range(0,65):

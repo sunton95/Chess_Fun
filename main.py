@@ -18,7 +18,7 @@ from game_logic import *
 pygame.init()
 
 #A string on how the board will be set up for play
-FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+FEN_string = '8/8/8/2k5/2pP4/8/B7/4K3 b - d3 0 3'
 
 #resolution of the game
 screen = pygame.display.set_mode((800, 800))
@@ -35,7 +35,6 @@ drop_pos = None
 
 while(1):
     piece = get_square_under_mouse(board_state.game_state)
-    print(board_state.move_number)
 
     for event in pygame.event.get():
         if event.type in (QUIT, KEYDOWN):

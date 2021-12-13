@@ -19,9 +19,11 @@ class Position:
 
     @staticmethod
     def chess_notation_to_cord(str):
-        array = ["A", "B", "C", "D", "E", "F", "G", "H"]
+        array = ["a", "b", "c", "d", "e", "f", "g", "h"]
         x = 1
         
+        str = str.lower()
+
         for i in array:
             if (i == str[0]):
                 cord = x
