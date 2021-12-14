@@ -17,6 +17,15 @@ class Pawn(Pieces):
 
     en_passant_target = En_passant(None, None)
     move_number = None
+    image_white = None
+    image_black = None
+
+    def __init__(self, color, position, label):
+        super().__init__(color, position, label)
+        if(self.color == "White"):
+            self.image = Pawn.image_white
+        else:
+            self.image = Pawn.image_black
 
     def move(self, cord, game_state):
         if self.color == "White":
@@ -62,7 +71,7 @@ class Pawn(Pieces):
 
             if(cord != None):
                 if(cord.y == 8 or cord.y == 1):
-                    game_state.append(Queen(self.color, (cord.x, cord.y), "Q", self.image))
+                    game_state.append(Queen(self.color, (cord.x, cord.y), "Q"))
                     game_state.remove(self)
                     return None
         

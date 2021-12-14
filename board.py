@@ -29,12 +29,12 @@ class GameBoard:
         self.flags = Flags(False, False, False, False)
 
     #Uses the FEN foramting to set the board and initilize the flags indicating casteling and en passant
-    def board_setup(self, FEN_string, images):
+    def board_setup(self, FEN_string):
         pieces_on_board, side_to_move, casteling_ability, enpassant_target, half_clock, full_clock = FEN_string.split(' ')
         
         self.initialize_casteling(casteling_ability)
         self.initialize_move_number(side_to_move, half_clock, full_clock)
-        self.initilize_pieces(images, pieces_on_board)
+        self.initilize_pieces(pieces_on_board)
 
         if(enpassant_target != '-'):
             Pawn.en_passant_target = En_passant(Position.chess_notation_to_cord(enpassant_target), (self.move_number - 1))
@@ -59,34 +59,34 @@ class GameBoard:
         elif side_to_move == 'b':
             self.move_number = move
     
-    def initilize_pieces(self, images, pieces_on_board):
+    def initilize_pieces(self, pieces_on_board):
         index = [1, 8]
 
         for pieces in pieces_on_board:
             if pieces == 'P':
-                self.game_state.append(Pawn("White", index, "P", images[6])) 
+                self.game_state.append(Pawn("White", index, "P")) 
             elif pieces == 'R':
-                self.game_state.append(Rook("White", index, "R", images[8]))
+                self.game_state.append(Rook("White", index, "R"))
             elif pieces == 'N':
-                self.game_state.append(Knight("White", index, "N", images[7]))
+                self.game_state.append(Knight("White", index, "N"))
             elif pieces == 'B':
-                self.game_state.append(Bishop("White", index, "B", images[9]))
+                self.game_state.append(Bishop("White", index, "B"))
             elif pieces == 'Q':
-                self.game_state.append(Queen("White", index, "Q", images[10]))
+                self.game_state.append(Queen("White", index, "Q"))
             elif pieces == 'K':
-                self.game_state.append(King("White", index, "K", images[11])) 
+                self.game_state.append(King("White", index, "K")) 
             elif pieces == 'p':
-                self.game_state.append(Pawn("Black", index, "p", images[0]))
+                self.game_state.append(Pawn("Black", index, "p"))
             elif pieces == 'r':
-                self.game_state.append(Rook("Black", index, "r", images[2])) 
+                self.game_state.append(Rook("Black", index, "r")) 
             elif pieces == 'n':
-                self.game_state.append(Knight("Black", index, "n", images[1]))         
+                self.game_state.append(Knight("Black", index, "n"))         
             elif pieces == 'b':
-                self.game_state.append(Bishop("Black", index, "b", images[3])) 
+                self.game_state.append(Bishop("Black", index, "b")) 
             elif pieces == 'q':
-                self.game_state.append(Queen("Black", index, "q", images[4])) 
+                self.game_state.append(Queen("Black", index, "q")) 
             elif pieces == 'k':
-                self.game_state.append(King("Black", index, "k", images[5]))  
+                self.game_state.append(King("Black", index, "k"))  
 
             if pieces == "/":
                 index[1] -= 1
@@ -108,58 +108,54 @@ class GameBoard:
 
     #Loads each piece image and resizes it to 100px and returns a list with all images
     def init_images(self):
-        images = []
 
         black_pawn = pygame.image.load('images/black_pawn.png').convert_alpha()
         black_pawn = pygame.transform.scale(black_pawn, (100, 100))
+        Pawn.image_black = black_pawn
 
         black_knight = pygame.image.load('images/black_knight.png').convert_alpha()
         black_knight = pygame.transform.scale(black_knight, (100, 100))
+        Knight.image_black = black_knight
 
         black_rook = pygame.image.load('images/black_rook.png').convert_alpha()
         black_rook = pygame.transform.scale(black_rook, (100, 100))
+        Rook.image_black = black_rook
 
         black_bishop = pygame.image.load('images/black_bishop.png').convert_alpha()
         black_bishop = pygame.transform.scale(black_bishop, (100, 100))
+        Bishop.image_black = black_bishop
 
         black_queen = pygame.image.load('images/black_queen.png').convert_alpha()
         black_queen = pygame.transform.scale(black_queen, (100, 100))
+        Queen.image_black = black_queen
 
         black_king = pygame.image.load('images/black_king.png').convert_alpha()
         black_king = pygame.transform.scale(black_king, (100, 100))
+        King.image_black = black_king
 
         white_pawn = pygame.image.load('images/white_pawn.png').convert_alpha()
         white_pawn = pygame.transform.scale(white_pawn, (100, 100))
+        Pawn.image_white = white_pawn
 
         white_knight = pygame.image.load('images/white_knight.png').convert_alpha()
         white_knight = pygame.transform.scale(white_knight, (100, 100))
+        Knight.image_white = white_knight
 
         white_rook = pygame.image.load('images/white_rook.png').convert_alpha()
         white_rook = pygame.transform.scale(white_rook, (100, 100))
+        Rook.image_white = white_rook
 
         white_bishop = pygame.image.load('images/white_bishop.png').convert_alpha()
         white_bishop = pygame.transform.scale(white_bishop, (100, 100))
+        Bishop.image_white = white_bishop
 
         white_queen = pygame.image.load('images/white_queen.png').convert_alpha()
         white_queen = pygame.transform.scale(white_queen, (100, 100))
+        Queen.image_white = white_queen
 
         white_king = pygame.image.load('images/white_king.png').convert_alpha()
         white_king = pygame.transform.scale(white_king, (100, 100))
-
-        images.append(black_pawn)
-        images.append(black_knight)
-        images.append(black_rook)
-        images.append(black_bishop)
-        images.append(black_queen)
-        images.append(black_king)
-        images.append(white_pawn)
-        images.append(white_knight)
-        images.append(white_rook)
-        images.append(white_bishop)
-        images.append(white_queen)
-        images.append(white_king)
-
-        return images
+        King.image_white = white_king
 
     def draw_background(self, screen):
         # Initialing Color for each square

@@ -27,8 +27,8 @@ pygame.display.set_caption('Extreme Chess')
 
 #Initilize the game and pieces posisiton
 board_state = GameBoard(move_number = 0)
-images = board_state.init_images()
-board_state.board_setup(FEN_string, images)
+board_state.init_images()
+board_state.board_setup(FEN_string)
 
 #variables for draging the pices in UI
 selected_piece = None

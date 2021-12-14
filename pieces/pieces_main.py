@@ -13,11 +13,10 @@ from postition import *
 
 #Parent class for all the chesspieces
 class Pieces:
-    def __init__(self, color, position, label, image):
+    def __init__(self, color, position, label):
         self.color = color
         self.position = Position(position[0], position[1])
         self.label = label
-        self.image = image
 
     def __str__(self):
         return "{} {}".format(self.color, self.position)
