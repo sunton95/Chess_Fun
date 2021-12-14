@@ -27,7 +27,7 @@ class Pawn(Pieces):
         else:
             self.image = Pawn.image_black
 
-    def move(self, cord, game_state):
+    def move(self, cord, game_state, flags):
         if self.color == "White":
             moves = [Position(0, 1),
                      Position(1, 1),
@@ -36,7 +36,7 @@ class Pawn(Pieces):
             if(self.position.y == 2):
                 moves.append(Position(0,2))
 
-            return self.pawn_move(cord, game_state, moves)     
+            return self.pawn_move(cord, game_state, moves, flags)     
 
         elif self.color == "Black":
             moves = [Position(0, -1),
@@ -46,9 +46,9 @@ class Pawn(Pieces):
             if(self.position.y == 7):
                 moves.append(Position(0,-2))
 
-            return self.pawn_move(cord, game_state, moves)
+            return self.pawn_move(cord, game_state, moves, flags)
 
-    def pawn_move(self, cord, game_state, moves):
+    def pawn_move(self, cord, game_state, moves, flags):
         available_moves = []
 
         self.find_pawn_moves(cord, game_state, moves, available_moves)
@@ -76,7 +76,7 @@ class Pawn(Pieces):
                     return None
         
                 
-        self.piece_take(cord, game_state, available_moves)
+        self.piece_take(cord, game_state, available_moves, flags)
 
         return available_moves
 

@@ -18,7 +18,7 @@ from game_logic import *
 pygame.init()
 
 #A string on how the board will be set up for play
-FEN_string =  '8/8/8/2k5/2pP4/8/B7/4K3 b - d3 0 3'
+FEN_string =  'r6r/1b2k1bq/8/8/7B/8/8/R3K2R b KQ - 3 2'
 #FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 #resolution of the game
@@ -51,7 +51,7 @@ while(1):
             drop_pos = None
 
     board_state.draw_background(screen)
-    drop_pos = board_state.draw_drag(screen, selected_piece, board_state.game_state)
+    drop_pos = board_state.draw_drag(screen, selected_piece, board_state.game_state, board_state.flags)
     board_state.draw_pieces(screen, selected_piece)
 
     pygame.display.update()

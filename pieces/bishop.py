@@ -23,15 +23,14 @@ class Bishop(Pieces):
         else:
             self.image = Bishop.image_black
 
-    def move(self, cord, list):
+    def move(self, cord, board_state, flags):
         available_moves = []
-        pieces_on_same_lane = list
         move_dir = (Position(1, 1),
                     Position(1, -1),
                     Position(-1, 1),
                     Position(-1, -1))
 
 
-        available_moves = self.QRB_move(available_moves, pieces_on_same_lane, move_dir)
-        self.piece_take(cord, list, available_moves)
+        available_moves = self.QRB_move(available_moves, board_state, move_dir)
+        self.piece_take(cord, board_state, available_moves, flags)
         return available_moves

@@ -44,9 +44,14 @@ def move_piece(self, new_pos, selected_piece):
     #Shifts eo each player take one turn each. White begins
     if ((self.move_number) % 2) == 0:
         if (selected_piece.color == "Black"):
-            selected_piece.move(new_pos, self.game_state) 
+            selected_piece.move(new_pos, self.game_state, self.flags) 
             self.move_number += 1
     elif((self.move_number) % 2) == 1:
         if (selected_piece.color == "White"):
-            selected_piece.move(new_pos, self.game_state) 
+            selected_piece.move(new_pos, self.game_state, self.flags) 
             self.move_number += 1
+    
+    print(self.flags.white_queen_side_castling, 
+          self.flags.white_king_side_castling, 
+          self.flags.black_queen_side_castling,
+          self.flags.black_king_side_castling)

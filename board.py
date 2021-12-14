@@ -1,14 +1,13 @@
 # =============================================================================
 # Created By  : Anton Sundqvist
 # Created Date: 2021-12-13
-"""This fiel has the functions of drawing the game on the GUI and initilize the 
+"""This file has the functions of drawing the game on the GUI and initilize the 
 setup of the game. """
 # =============================================================================
 # TODO
 #Add casteling, add en passant check
 # =============================================================================
 # Imports
-from pygame import image
 from pieces.bishop import *
 from pieces.king import *
 from pieces.queen import *
@@ -169,7 +168,7 @@ class GameBoard:
                 else:
                     pygame.draw.rect(screen, ch_2, pygame.Rect((y * 100), (x * 100), 100, 100))
 
-    def draw_drag(self, screen, selected_piece, game_state):
+    def draw_drag(self, screen, selected_piece, game_state, flags):
         #Get the cordinate of the mouse so we know were the piece is dropped
         mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
         x = int((mouse_pos[0] // 100) + 1)
@@ -186,7 +185,7 @@ class GameBoard:
         
             screen.blit(selected_piece.image, ((mouse_pos[0] - 50), (mouse_pos[1] - 50)))
 
-            avilable_moves = selected_piece.move(None, game_state)
+            avilable_moves = selected_piece.move(None, game_state, flags)
             for move in avilable_moves:
                 s = pygame.Surface((100,100), pygame.SRCALPHA)   # per-pixel alpha
                 s.fill((255,0,0,128))                         # notice the alpha value in the color

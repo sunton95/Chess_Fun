@@ -23,7 +23,7 @@ class Knight(Pieces):
         else:
             self.image = Knight.image_black
 
-    def move(self, cord, list):
+    def move(self, cord, board_state, flags):
         available_moves = []
         available_moves.append(Position((self.position.x + 1), (self.position.y + 2)))
         available_moves.append(Position((self.position.x + 2), (self.position.y + 1)))
@@ -34,6 +34,6 @@ class Knight(Pieces):
         available_moves.append(Position((self.position.x + 1), (self.position.y - 2)))
         available_moves.append(Position((self.position.x + 2), (self.position.y - 1)))
 
-        self.find_freindly(list, available_moves)
-        self.piece_take(cord, list, available_moves)
+        self.find_freindly(board_state, available_moves)
+        self.piece_take(cord, board_state, available_moves, flags)
         return available_moves

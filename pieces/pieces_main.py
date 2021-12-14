@@ -27,24 +27,34 @@ class Pieces:
                 if move == pieces.position and self.color == pieces.color:
                     available_moves.remove(move)
 
-    def piece_take(self, cord, list, available_moves):
+    def piece_take(self, cord, list, available_moves, flags):
         if cord != None:
             for move in available_moves:
                 if move == cord:
                     for pieces in list:
                         if pieces.position == move:
+                            from .rook import Rook
+                            if(type(pieces) is Rook):
+                                if(pieces.position == Position(1, 1)):
+                                    flags.white_queen_side_castling = False
+                                elif(pieces.position == Position(1, 8)):
+                                    flags.white_king_side_castling = False
+                                elif(pieces.position == Position(1, 8)):
+                                    flags.black_queen_side_castling = False
+                                elif(pieces.position == Position(8, 8)):
+                                    flags.black_king_side_castling = False
                             list.remove(pieces)
                     self.position = cord
                     break
     
-    def QRB_move(self, available_moves, pieces_on_same_lane, move_dir):
+    def QRB_move(self, available_moves, board_state, move_dir):
         for dir in move_dir:
             for scalar in range(1, 9):
                 check_if_valid = dir.dir_scale(scalar, self.position)
 
                 if(check_if_valid.x > 8 or check_if_valid.y > 8 or check_if_valid.x < 1 or check_if_valid.y < 1):
                     break
-                flag = self.check_occupied(available_moves, pieces_on_same_lane, check_if_valid)
+                flag = self.check_occupied(available_moves, board_state, check_if_valid)
 
                 if(flag == True):
                     available_moves.append(check_if_valid)
@@ -53,8 +63,8 @@ class Pieces:
 
         return available_moves
 
-    def check_occupied(self, available_moves, pieces_on_same_lane, check_if_valid):
-        for piece in pieces_on_same_lane:
+    def check_occupied(self, available_moves, board_state, check_if_valid):
+        for piece in board_state:
             if piece.position == check_if_valid:
                 if piece.color == self.color:
                     return False
