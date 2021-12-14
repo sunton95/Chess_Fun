@@ -5,7 +5,7 @@
 """"""
 # =============================================================================
 # TODO
-#
+#When a pawn take and promotes at the same time it buggs
 # =============================================================================
 # Imports
 from board import *
@@ -18,8 +18,8 @@ from game_logic import *
 pygame.init()
 
 #A string on how the board will be set up for play
-FEN_string =  'r6r/1b2k1bq/8/8/7B/8/8/R3K2R b KQ - 3 2'
-#FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+#FEN_string =  'r6r/1b2k1bq/8/8/7B/8/8/R3K2R b KQ - 3 2'
+FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 #resolution of the game
 screen = pygame.display.set_mode((800, 800))

@@ -4,7 +4,7 @@
 """"""
 # =============================================================================
 # TODO
-#
+# Add so castling is not possible if moving trough a check
 # =============================================================================
 # Imports
 from .pieces_main import Pieces
@@ -23,8 +23,11 @@ class King(Pieces):
         else:
             self.image = King.image_black
     
+    #Creates a list with the avialable moves at the kings current location. Also checks if casteling is possible
     def move(self, cord, board_state, flags):
         available_moves = []
+
+        #All available moves for the king in normal conditions
         available_moves.append(Position((self.position.x + 1), (self.position.y)))
         available_moves.append(Position((self.position.x + 1), (self.position.y + 1)))
         available_moves.append(Position((self.position.x + 1), (self.position.y - 1)))
@@ -34,25 +37,47 @@ class King(Pieces):
         available_moves.append(Position((self.position.x - 1), (self.position.y + 1)))
         available_moves.append(Position((self.position.x - 1), (self.position.y - 1)))
 
+        #Checks if castling is possible and returns the avialbel moves
         self.castling_move(cord, board_state, flags, available_moves)
 
+        #Special move when castling, moves both rook and king
+        if(cord == Position(7, 1) and self.position == Position(5, 1)):
+            for piece in board_state:
+                if(piece.position == Position(8, 1)):
+                    piece.position = Position(6, 1)
+                    self.position = cord
+            return None
+        if(cord == Position(3, 1) and self.position == Position(5, 1)):
+            for piece in board_state:
+                if(piece.position == Position(1, 1)):
+                    piece.position = Position(4, 1)
+                    self.position = cord
+            return None
+        if(cord == Position(7, 8) and self.position == Position(5, 8)):
+            for piece in board_state:
+                if(piece.position == Position(8, 8)):
+                    piece.position = Position(6, 8)
+                    self.position = cord
+            return None
+        if(cord == Position(3, 8) and self.position == Position(5, 8)):
+            for piece in board_state:
+                if(piece.position == Position(1, 8)):
+                    piece.position = Position(4, 8)
+                    self.position = cord
+            return None
+        
+        #Normal move is made with these functions
         self.find_freindly(board_state, available_moves)
         self.piece_take(cord, board_state, available_moves, flags)
         return available_moves
 
+    #Checks if csastling is still possible and generates the move
     def castling_move(self, cord, board_state, flags, available_moves):
-        #If the king moves castling ability is removed
-        if(cord != None):
-            if(self.position == Position(5, 8)):
-                flags.black_king_side_castling = False
-                flags.black_queen_side_castling = False
-            elif(self.position== Position(5, 1)):
-                flags.white_king_side_castling = False
-                flags.white_queen_side_castling = False
-
         empty_sqaure_king_side = False
         empty_sqaure_queen_side = False
 
+        #Checks taht all squares between the king and the rook is empty
+        #Castling is not possible if these squares are blocked
         if(self.color == "White"):
             if(flags.white_king_side_castling == True):
                 for piece in board_state:
@@ -81,8 +106,8 @@ class King(Pieces):
                         empty_sqaure_king_side = True
                     elif(piece.position == Position(7, 8)):
                         empty_sqaure_king_side = True   
-            if(empty_sqaure_king_side == False):
-                available_moves.append(Position(7, 8))
+                if(empty_sqaure_king_side == False):
+                    available_moves.append(Position(7, 8))
 
             if(flags.black_queen_side_castling == True):
                 for piece in board_state:
@@ -92,5 +117,14 @@ class King(Pieces):
                         empty_sqaure_queen_side = True
                     elif(piece.position == Position(2, 18)):
                         empty_sqaure_queen_side = True
-            if(empty_sqaure_queen_side == False):
-                available_moves.append(Position(3, 8))
+                if(empty_sqaure_queen_side == False):
+                    available_moves.append(Position(3, 8))
+
+        #If the king moves castling ability is removed
+        if(cord != None):
+            if(self.position == Position(5, 8)):
+                flags.black_king_side_castling = False
+                flags.black_queen_side_castling = False
+            elif(self.position== Position(5, 1)):
+                flags.white_king_side_castling = False
+                flags.white_queen_side_castling = False
