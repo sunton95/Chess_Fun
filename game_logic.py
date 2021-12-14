@@ -8,6 +8,7 @@
 # =============================================================================
 # Imports
 import pygame
+from pieces.pawn import Pawn
 from postition import *
 # =============================================================================
 
@@ -39,7 +40,7 @@ def move_piece(self, new_pos, selected_piece):
         return None
 
     #TODO add a function that makes sure the move does not generate a check on self
-
+    
     #Shifts eo each player take one turn each. White begins
     if ((self.move_number) % 2) == 0:
         if (selected_piece.color == "Black"):
