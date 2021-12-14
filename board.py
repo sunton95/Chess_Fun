@@ -31,13 +31,13 @@ class GameBoard:
     #Uses the FEN foramting to set the board and initilize the flags indicating casteling and en passant
     def board_setup(self, FEN_string, images):
         pieces_on_board, side_to_move, casteling_ability, enpassant_target, half_clock, full_clock = FEN_string.split(' ')
-
-        if(enpassant_target != '-'):
-            Pawn.en_passant_target = Position.chess_notation_to_cord(enpassant_target)
         
         self.initialize_casteling(casteling_ability)
         self.initialize_move_number(side_to_move, half_clock, full_clock)
         self.initilize_pieces(images, pieces_on_board)
+
+        if(enpassant_target != '-'):
+            Pawn.en_passant_target = En_passant(Position.chess_notation_to_cord(enpassant_target), self.move_number)
 
     def initialize_casteling(self, casteling_ability):
         for char in casteling_ability:
@@ -98,6 +98,8 @@ class GameBoard:
 
     #Checks if a piece is clicked if it is it wont be drawn at its location. That pieces drawing is handled by draw_drag function
     def draw_pieces(self, screen, selected_piece):
+        Pawn.move_number = self.move_number
+        
         for pieces in self.game_state:
             if pieces != selected_piece:
                 x = (pieces.position.x - 1) * 100
