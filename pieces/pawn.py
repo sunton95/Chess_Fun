@@ -62,8 +62,6 @@ class Pawn(Pieces):
                 if((moves[3] + self.position) == piece.position or (moves[0] + self.position) == piece):
                     available_moves.remove(Position((self.position.x + moves[3].x), (self.position.y + moves[3].y)))
 
-        #Todo update en passant square
-        #Add takes on en pessant
         if(Pawn.en_passant_target.target == (moves[1] + self.position)):
             if((Pawn.en_passant_target.move_number + 1) == (Pawn.move_number)):
                 available_moves.append(moves[1] + self.position)
@@ -79,9 +77,6 @@ class Pawn(Pieces):
                         game_state.remove(piece)
                         self.position = cord
                 return None
-
-        print(Pawn.en_passant_target.target, Pawn.move_number, Pawn.en_passant_target.move_number)
-
-
+                
         self.piece_take(cord, game_state, available_moves)
         return available_moves
