@@ -5,6 +5,7 @@
 # =============================================================================
 # TODO
 #Bugg when i move the pice to a squre that is not valid but another square the move_number goes up
+#Add promotion of pawn to queen
 # =============================================================================
 # Imports
 import pygame

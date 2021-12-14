@@ -37,7 +37,7 @@ class GameBoard:
         self.initilize_pieces(images, pieces_on_board)
 
         if(enpassant_target != '-'):
-            Pawn.en_passant_target = En_passant(Position.chess_notation_to_cord(enpassant_target), self.move_number)
+            Pawn.en_passant_target = En_passant(Position.chess_notation_to_cord(enpassant_target), (self.move_number - 1))
 
     def initialize_casteling(self, casteling_ability):
         for char in casteling_ability:

@@ -18,7 +18,8 @@ from game_logic import *
 pygame.init()
 
 #A string on how the board will be set up for play
-FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+FEN_string =  '8/8/8/2k5/2pP4/8/B7/4K3 b - d3 0 3'
+#FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
 
 #resolution of the game
 screen = pygame.display.set_mode((800, 800))
