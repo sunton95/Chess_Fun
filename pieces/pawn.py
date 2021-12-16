@@ -68,15 +68,14 @@ class Pawn(Pieces):
                         game_state.remove(piece)
                         self.position = cord
                 return None
-
-            if(cord != None):
-                if(cord.y == 8 or cord.y == 1):
-                    game_state.append(Queen(self.color, (cord.x, cord.y), "Q"))
-                    game_state.remove(self)
-                    return None
-        
                 
         self.piece_take(cord, game_state, available_moves, flags)
+
+        if(cord != None):
+            if(cord.y == 8 or cord.y == 1):
+                game_state.append(Queen(self.color, (cord.x, cord.y), "Q"))
+                game_state.remove(self)
+                return None
 
         return available_moves
 
