@@ -37,7 +37,7 @@ class Pieces:
                             if(type(pieces) is Rook):
                                 if(pieces.position == Position(1, 1)):
                                     flags.white_queen_side_castling = False
-                                elif(pieces.position == Position(1, 8)):
+                                elif(pieces.position == Position(8, 1)):
                                     flags.white_king_side_castling = False
                                 elif(pieces.position == Position(1, 8)):
                                     flags.black_queen_side_castling = False
