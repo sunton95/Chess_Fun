@@ -63,13 +63,13 @@ class GameBoard:
 
         for pieces in pieces_on_board:
             if pieces == 'P':
-                self.game_state.append(Pawn("White", index, "P")) 
+                self.game_state.append(Pawn("White", index, 'P')) 
             elif pieces == 'R':
-                self.game_state.append(Rook("White", index, "R"))
+                self.game_state.append(Rook("White", index, 'R'))
             elif pieces == 'N':
-                self.game_state.append(Knight("White", index, "N"))
+                self.game_state.append(Knight("White", index, 'N'))
             elif pieces == 'B':
-                self.game_state.append(Bishop("White", index, "B"))
+                self.game_state.append(Bishop("White", index, 'B'))
             elif pieces == 'Q':
                 self.game_state.append(Queen("White", index, "Q"))
             elif pieces == 'K':
@@ -225,6 +225,77 @@ class GameBoard:
         print("")
         print("|{}|{}|{}|{}|{}|{}|{}|{}|".format("A","B","C","D","E","F","G", "H"))
         print("")
+
+def mark_king():
+    print("CHECK")
+
+def remove_spaces(string):
+    list = [string[i:i+8] for i in range(0, len(string), 8)]
+    temp_string = []
+    fen_string = ''
+
+    for row in list:
+        for l in row:
+            if(l == ' '):
+                temp_string.append('1')
+            else:
+                temp_string.append(l)
+                
+        temp_string.reverse()
+        temp_string.append('/')
+        fen_string += ''.join(temp_string)
+        temp_string.clear()
+
+    return fen_string
+
+
+def generate_fen_string(self):
+    #FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+    string = '                                                                '
+    string = list(string)
+    en_passant = None
+
+    for piece in self.game_state:
+        index = piece.position.convert_coordinates()
+        string[index] = piece.label
+        if(piece.label == 'p' or piece.label == 'P'):
+            en_passant = piece
+
+
+    fen_list = list(remove_spaces(''.join(string)))
+    fen_list = fen_list[:-1]
+    string = ''.join(fen_list)
+    string = string[::-1]
+
+    if ((self.move_number) % 2) == 0:
+        string += ' b '
+    elif((self.move_number) % 2) == 1:
+        string += ' w '
+
+    if(self.flags.white_king_side_castling == True):
+        string += 'K'
+    if(self.flags.white_queen_side_castling == True):
+        string += 'Q'
+    if(self.flags.black_king_side_castling == True):
+        string += 'k'
+    if(self.flags.black_queen_side_castling == True):
+        string += 'q'
+
+    #Add correct conversion between position and chess notation
+    if(en_passant != None):
+        if((en_passant.en_passant_target.move_number + 1) == self.move_number):
+            string += ' ' + en_passant.en_passant_target.cord_change() + ' '
+        else:
+            string += ' - '
+    else:
+        string += ' - '
+
+    string += '0 ' + str(self.move_number // 2)
+
+    print(string)
+    
+    return string
+
 
 if __name__ == "__main__":
     import main

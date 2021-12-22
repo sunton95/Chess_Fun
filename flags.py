@@ -26,3 +26,6 @@ class En_passant:
     def __init__(self, target, move_number):
         self.target = target
         self.move_number = move_number
+
+    def cord_change():
+        return 'd3'
