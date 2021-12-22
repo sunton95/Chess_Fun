@@ -281,7 +281,7 @@ def generate_fen_string(self):
     if(self.flags.black_queen_side_castling == True):
         string += 'q'
 
-    #Add correct conversion between position and chess notation
+    #TODO Add correct conversion between position and chess notation
     if(en_passant != None):
         if((en_passant.en_passant_target.move_number + 1) == self.move_number):
             string += ' ' + en_passant.en_passant_target.cord_change() + ' '

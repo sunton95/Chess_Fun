@@ -92,7 +92,11 @@ def move_order_testing(self, new_pos, selected_piece):
 def move_while_check(self, new_pos, king_position, selected_piece):
     old_state = board.generate_fen_string(self)
     move_order(self, new_pos, selected_piece)
-    check = check_for_checK(self, king_position)
+
+    if(selected_piece.label == 'K' or selected_piece.label == 'k'):
+        check = check_for_checK(self, new_pos)
+    else:
+        check = check_for_checK(self, king_position)
 
     if(check == True):
         self.game_state.clear()
