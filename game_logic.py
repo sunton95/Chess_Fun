@@ -64,7 +64,11 @@ def move_piece(self, new_pos, selected_piece):
 
     #TODO add a function that makes sure the move does not generate a check on self
     king_position = find_king(self, selected_piece.color)
-    check = check_for_checK(self, king_position)
+
+    if(selected_piece.label == 'K' or selected_piece.label == 'k'):
+        check = check_for_checK(self, new_pos)
+    else:
+        check = check_for_checK(self, king_position)
 
     if(check == True):
         board.mark_king()
@@ -101,7 +105,6 @@ def move_while_check(self, new_pos, king_position, selected_piece):
     if(check == True):
         self.game_state.clear()
         self.board_setup(old_state)
-        print("KEK")
     
     return None
 

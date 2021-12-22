@@ -240,7 +240,7 @@ def remove_spaces(string):
                 temp_string.append('1')
             else:
                 temp_string.append(l)
-                
+
         temp_string.reverse()
         temp_string.append('/')
         fen_string += ''.join(temp_string)
@@ -291,8 +291,6 @@ def generate_fen_string(self):
         string += ' - '
 
     string += '0 ' + str(self.move_number // 2)
-
-    print(string)
     
     return string
 
