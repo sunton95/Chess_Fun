@@ -22,15 +22,16 @@ def find_king(self, color):
                 return piece.position
 
 #Returns True if the square in question is in check otherwise false
-def check_for_checK(self, square_to_ceck):
+def check_for_check(self, square_to_ceck):
     avilable_moves = []
-
+    
     for piece in self.game_state:
         moves = piece.move(None, self.game_state, self.flags)
         for move in moves:
                 if(move.x >= 1 and move.x <= 8):
                     if(move.y >= 1 and move.y <= 8):
                         avilable_moves.append(move)
+
     for move in avilable_moves:
         if(move == square_to_ceck):
             return True
@@ -56,19 +57,13 @@ def move_piece(self, new_pos, selected_piece):
     if selected_piece.position == new_pos:
         return None
 
-    #Add function that looks for check
-    check_flag = False
-    #check_flag = check_for_check(selected_piece)
-    if check_flag == True:
-        return None
-
     #TODO add a function that makes sure the move does not generate a check on self
     king_position = find_king(self, selected_piece.color)
 
     if(selected_piece.label == 'K' or selected_piece.label == 'k'):
-        check = check_for_checK(self, new_pos)
+        check = check_for_check(self, new_pos)
     else:
-        check = check_for_checK(self, king_position)
+        check = check_for_check(self, king_position)
 
     if(check == True):
         board.mark_king()
@@ -77,7 +72,7 @@ def move_piece(self, new_pos, selected_piece):
 
     #Shifts so each player take one turn each. White begins
     move_order(self, new_pos, selected_piece)
-    #move_order_testing(self, new_pos, selected_piece)
+    #move_no_order_testing(self, new_pos, selected_piece)
 
 def move_order(self, new_pos, selected_piece):
     if ((self.move_number) % 2) == 0:
@@ -89,7 +84,7 @@ def move_order(self, new_pos, selected_piece):
             selected_piece.move(new_pos, self.game_state, self.flags) 
             self.move_number += 1
 
-def move_order_testing(self, new_pos, selected_piece):
+def move_no_order_testing(self, new_pos, selected_piece):
     selected_piece.move(new_pos, self.game_state, self.flags) 
     self.move_number += 1
 
@@ -98,9 +93,9 @@ def move_while_check(self, new_pos, king_position, selected_piece):
     move_order(self, new_pos, selected_piece)
 
     if(selected_piece.label == 'K' or selected_piece.label == 'k'):
-        check = check_for_checK(self, new_pos)
+        check = check_for_check(self, new_pos)
     else:
-        check = check_for_checK(self, king_position)
+        check = check_for_check(self, king_position)
 
     if(check == True):
         self.game_state.clear()

@@ -7,17 +7,84 @@
 # =============================================================================
 # Imports
 import random
-
+import board
+from pieces.king import King
+import game_logic as gl
 from pygame import init
+
+from postition import Position
 # =============================================================================
 class scuffedfish:
     def __init__(self, piece_position, possible_move):
         self.piece_position = piece_position
         self.possible_move = possible_move
 
+    def __str__(self):
+        return "piece = ({}, {}) move = ({}, {})".format(self.piece_position.x,
+                                            self.piece_position.y,
+                                            self.possible_move.x,
+                                            self.possible_move.y )
 
 def random_move(self):
+    avilable_moves = generate_moves(self)
+
+    move_range = len(avilable_moves)
+
+    if(move_range == 0):
+        print("CHECK m8 motherfuicker")
+        return None
+
+    x = random.randint(0, (move_range - 1))
+
+    if(self.move_number == 4):
+         self.game_state[0].move(Position(4,6), self.game_state, self.flags)
+
+    for piece in self.game_state:
+        if(piece.position == avilable_moves[x].piece_position):
+            piece.move(avilable_moves[x].possible_move, self.game_state, self.flags)
+        
+    self.move_number += 1
+    avilable_moves.clear()
+
+#TODO the ai can move into a check position
+def remove_invalid_moves(self, avilable_moves, king_position ):
+    old_state = board.generate_fen_string(self)
+    remove_these_moves = []
+    self.game_state.clear()
+    self.board_setup(old_state)
+
+    for x, piece in enumerate(self.game_state):
+        for move in avilable_moves:
+            if(move.piece_position == piece.position):
+                self.game_state[x].move(move.possible_move, self.game_state, self.flags) 
+
+                if(piece.label == 'K' or piece.label == 'k'):
+                    check = gl.check_for_check(self, move.possible_move)
+                else:
+                    check = gl.check_for_check(self, king_position)
+                
+                if(check == True):
+                    remove_these_moves.append(move)
+                
+                piece.position = move.piece_position
+                self.game_state.clear()
+                self.board_setup(old_state)
+
+    for move in remove_these_moves:
+        try:
+            avilable_moves.remove(move)
+        except ValueError:
+            print(move)
+
+    self.game_state.clear()
+    self.board_setup(old_state)
+    return avilable_moves
+
+def generate_moves(self):
     avilable_moves = []
+
+    king_position = gl.find_king(self, "Black")
+    check = gl.check_for_check(self, king_position)
 
     for piece in self.game_state:
         if(piece.color == "Black"):
@@ -26,20 +93,8 @@ def random_move(self):
                 if(move.x >= 1 and move.x <= 8):
                     if(move.y >= 1 and move.y <= 8):
                         avilable_moves.append(scuffedfish(piece.position, move))
-
-
-    move_range = len(avilable_moves)
-    x = random.randint(0, move_range)
-
-    for piece in self.game_state:
-        if(piece.position == avilable_moves[x].piece_position):
-            piece.move(avilable_moves[x].possible_move, self.game_state, self.flags)
-        
-    self.move_number += 1
-
-    avilable_moves = None
     
+    if(check == True):
+        avilable_moves = remove_invalid_moves(self, avilable_moves, king_position )
 
-
-
-
+    return avilable_moves
