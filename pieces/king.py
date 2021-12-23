@@ -9,6 +9,7 @@
 # Imports
 from .pieces_main import Pieces
 from postition import Position
+import game_logic as gl
 # =============================================================================
 
 class King(Pieces):
@@ -71,12 +72,12 @@ class King(Pieces):
         self.piece_take(cord, board_state, available_moves, flags)
         return available_moves
 
-    #Checks if csastling is still possible and generates the move
+    #Checks if castling is still possible and generates the move
     def castling_move(self, cord, board_state, flags, available_moves):
         empty_sqaure_king_side = False
         empty_sqaure_queen_side = False
 
-        #Checks taht all squares between the king and the rook is empty
+        #Checks that all squares between the king and the rook is empty
         #Castling is not possible if these squares are blocked
         if(self.color == "White"):
             if(flags.white_king_side_castling == True):
@@ -85,7 +86,12 @@ class King(Pieces):
                         empty_sqaure_king_side = True
                     elif(piece.position == Position(7, 1)):
                         empty_sqaure_king_side = True   
-                if(empty_sqaure_king_side == False):
+
+                king_side_check = gl.check_for_check(board_state, Position(5, 1))
+                king_side_check = gl.check_for_check(board_state, Position(6, 1))
+                king_side_check = gl.check_for_check(board_state, Position(7, 1))
+
+                if(empty_sqaure_king_side == False and king_side_check == False):
                     available_moves.append(Position(7, 1))
 
             if(flags.white_queen_side_castling == True):
@@ -96,7 +102,13 @@ class King(Pieces):
                         empty_sqaure_queen_side = True
                     elif(piece.position == Position(2, 1)):
                         empty_sqaure_queen_side = True
-                if(empty_sqaure_queen_side == False):
+
+                queen_side_check = gl.check_for_check(board_state, Position(5, 1))
+                queen_side_check = gl.check_for_check(board_state, Position(4, 1))
+                queen_side_check = gl.check_for_check(board_state, Position(3, 1))
+                queen_side_check = gl.check_for_check(board_state, Position(2, 1))
+
+                if(empty_sqaure_queen_side == False and queen_side_check == False):
                     available_moves.append(Position(3, 1))
 
         if(self.color == "Black"):
@@ -106,7 +118,12 @@ class King(Pieces):
                         empty_sqaure_king_side = True
                     elif(piece.position == Position(7, 8)):
                         empty_sqaure_king_side = True   
-                if(empty_sqaure_king_side == False):
+                
+                king_side_check = gl.check_for_check(board_state, Position(5, 8))
+                king_side_check = gl.check_for_check(board_state, Position(6, 8))
+                king_side_check = gl.check_for_check(board_state, Position(7, 8))
+
+                if(empty_sqaure_king_side == False and king_side_check == False):
                     available_moves.append(Position(7, 8))
 
             if(flags.black_queen_side_castling == True):
@@ -117,7 +134,13 @@ class King(Pieces):
                         empty_sqaure_queen_side = True
                     elif(piece.position == Position(2, 18)):
                         empty_sqaure_queen_side = True
-                if(empty_sqaure_queen_side == False):
+                
+                queen_side_check = gl.check_for_check(board_state, Position(5, 8))
+                queen_side_check = gl.check_for_check(board_state, Position(4, 8))
+                queen_side_check = gl.check_for_check(board_state, Position(3, 8))
+                queen_side_check = gl.check_for_check(board_state, Position(2, 8))
+
+                if(empty_sqaure_queen_side == False and queen_side_check == False):
                     available_moves.append(Position(3, 8))
 
         #If the king moves castling ability is removed

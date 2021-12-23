@@ -282,7 +282,8 @@ def generate_fen_string(self):
         string += 'q'
 
     #TODO Add correct conversion between position and chess notation
-    if(en_passant != None):
+    #creats a bugg somewhere
+    if(en_passant != None and en_passant.en_passant_target.move_number != None):
         if((en_passant.en_passant_target.move_number + 1) == self.move_number):
             string += ' ' + en_passant.en_passant_target.cord_change() + ' '
         else:

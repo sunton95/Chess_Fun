@@ -57,8 +57,8 @@ while(1):
             selected_piece = None
             drop_pos = None
     
-    if((board_state.move_number) % 2) == 0:
-        ai.random_move(board_state)
+    #if((board_state.move_number) % 2) == 0:
+        #ai.random_move(board_state)
 
     board_state.draw_background(screen)
     drop_pos = board_state.draw_drag(screen, selected_piece, board_state.game_state, board_state.flags)

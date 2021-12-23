@@ -71,10 +71,7 @@ def remove_invalid_moves(self, avilable_moves, king_position ):
                 self.board_setup(old_state)
 
     for move in remove_these_moves:
-        try:
-            avilable_moves.remove(move)
-        except ValueError:
-            print(move)
+        avilable_moves.remove(move)
 
     self.game_state.clear()
     self.board_setup(old_state)
