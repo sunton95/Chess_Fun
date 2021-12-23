@@ -11,6 +11,7 @@ import pygame
 from pieces.pawn import Pawn
 from postition import *
 import board
+import pieces.king as king
 # =============================================================================
 def find_king(self, color):
     for piece in self.game_state:
@@ -62,6 +63,7 @@ def move_piece(self, new_pos, selected_piece):
 
     if(selected_piece.label == 'K' or selected_piece.label == 'k'):
         check = check_for_check(self, new_pos)
+        king.casteling_check(self)
     else:
         check = check_for_check(self, king_position)
 
@@ -73,7 +75,7 @@ def move_piece(self, new_pos, selected_piece):
     #Shifts so each player take one turn each. White begins
     move_order(self, new_pos, selected_piece)
     #move_no_order_testing(self, new_pos, selected_piece)
-
+    
 def move_order(self, new_pos, selected_piece):
     if ((self.move_number) % 2) == 0:
         if (selected_piece.color == "Black"):
