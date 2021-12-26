@@ -51,12 +51,13 @@ class Pawn(Pieces):
     def pawn_move(self, cord, game_state, moves, flags):
         available_moves = []
 
+        #Finds the regulare pawn moves
         self.find_pawn_moves(cord, game_state, moves, available_moves)
 
+        #Generates an en passant move if available first if is for white second for black
         if(Pawn.en_passant_target.target == (moves[1] + self.position)):
             if((Pawn.en_passant_target.move_number + 1) == (Pawn.move_number)):
                 available_moves.append(moves[1] + self.position)
-
         elif(Pawn.en_passant_target.target == (moves[2] + self.position)):
             if((Pawn.en_passant_target.move_number + 1) == (Pawn.move_number)):
                 available_moves.append(moves[2] + self.position)
@@ -82,6 +83,7 @@ class Pawn(Pieces):
     def find_pawn_moves(self, cord, game_state, moves, available_moves):
         available_moves.append(Position((self.position.x + moves[0].x), (self.position.y + moves[0].y)))
 
+
         if(len(moves) == 4):
             available_moves.append(Position((self.position.x + moves[3].x), (self.position.y + moves[3].y)))
             if((moves[3] + self.position) == cord):
@@ -97,6 +99,10 @@ class Pawn(Pieces):
                  available_moves.append(Position((self.position.x + moves[1].x), (self.position.y + moves[1].y)))
             elif((moves[2] + self.position) == piece.position and piece.color != self.color):
                 available_moves.append(Position((self.position.x + moves[2].x), (self.position.y + moves[2].y)))
-            elif(len(moves) == 4):
-                if((moves[3] + self.position) == piece.position or (moves[0] + self.position) == piece):
-                    available_moves.remove(Position((self.position.x + moves[3].x), (self.position.y + moves[3].y)))
+            
+            if(len(moves) == 4):
+                if((moves[3] + self.position) == piece.position or (moves[0] + self.position) == piece.position):
+                    try:
+                        available_moves.remove(Position((self.position.x + moves[3].x), (self.position.y + moves[3].y)))
+                    except ValueError:
+                          print("Kek")

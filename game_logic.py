@@ -67,13 +67,13 @@ def move_piece(self, new_pos, selected_piece):
     else:
         check = check_for_check(self, king_position, selected_piece.color)
 
-    if(check == True):
-        board.mark_king()
-        move_while_check(self, new_pos, king_position, selected_piece)
-        return None
+
+
+        
+    move_while_check(self, new_pos, king_position, selected_piece)
 
     #Shifts so each player take one turn each. White begins
-    move_order(self, new_pos, selected_piece)
+    #move_order(self, new_pos, selected_piece)
     #move_no_order_testing(self, new_pos, selected_piece)
     
 def move_order(self, new_pos, selected_piece):
@@ -102,6 +102,7 @@ def move_while_check(self, new_pos, king_position, selected_piece):
     if(check == True):
         self.game_state.clear()
         self.board_setup(old_state)
+        board.mark_king()
     
     return None
 

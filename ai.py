@@ -26,7 +26,7 @@ class scuffedfish:
                                             self.possible_move.y )
 
 def random_move(self):
-    
+
     Pawn.move_number = self.move_number
 
     avilable_moves = generate_moves(self)
@@ -62,6 +62,8 @@ def remove_invalid_moves(self, avilable_moves, king_position ):
     self.board_setup(old_state)
 
     for x, piece in enumerate(self.game_state):
+        if(piece.position == Position(4, 7)):
+            print("Hej")
         for move in avilable_moves:
             if(move.piece_position == piece.position):
                 self.game_state[x].move(move.possible_move, self.game_state, self.flags) 
@@ -88,9 +90,6 @@ def remove_invalid_moves(self, avilable_moves, king_position ):
 def generate_moves(self):
     avilable_moves = []
 
-    king_position = gl.find_king(self, "Black")
-    check = gl.check_for_check(self, king_position, "Black")
-
     for piece in self.game_state:
         if(piece.color == "Black"):
             moves = piece.move(None, self.game_state, self.flags)
@@ -99,7 +98,7 @@ def generate_moves(self):
                     if(move.y >= 1 and move.y <= 8):
                         avilable_moves.append(scuffedfish(piece.position, move))
     
-    if(check == True):
-        avilable_moves = remove_invalid_moves(self, avilable_moves, king_position )
+    king_position = gl.find_king(self, "Black")
+    avilable_moves = remove_invalid_moves(self, avilable_moves, king_position )
 
     return avilable_moves
