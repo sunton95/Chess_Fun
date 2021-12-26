@@ -25,7 +25,7 @@ class GameBoard:
         self.game_state = []
         self.position_list = []
         self.move_number = move_number
-        self.flags = Flags(False, False, False, False)
+        self.flags = Flags(False, False, False, False, False, False, False, False)
 
     #Uses the FEN foramting to set the board and initilize the flags indicating casteling and en passant
     def board_setup(self, FEN_string):
@@ -227,7 +227,8 @@ class GameBoard:
         print("")
 
 def mark_king():
-    print("CHECK")
+    #print("CHECK")
+    pass
 
 def remove_spaces(string):
     list = [string[i:i+8] for i in range(0, len(string), 8)]

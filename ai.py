@@ -11,7 +11,7 @@ import board
 from pieces.king import King
 import game_logic as gl
 from pygame import init
-
+from pieces.pawn import Pawn
 from postition import Position
 # =============================================================================
 class scuffedfish:
@@ -26,6 +26,9 @@ class scuffedfish:
                                             self.possible_move.y )
 
 def random_move(self):
+    
+    Pawn.move_number = self.move_number
+
     avilable_moves = generate_moves(self)
 
     move_range = len(avilable_moves)
@@ -44,6 +47,11 @@ def random_move(self):
             piece.move(avilable_moves[x].possible_move, self.game_state, self.flags)
         
     self.move_number += 1
+
+    print("{} avail moves".format(len(avilable_moves)))
+    for move in avilable_moves:
+        print("Position {}, Move {}".format(move.piece_position, move.possible_move))
+
     avilable_moves.clear()
 
 #TODO the ai can move into a check position
@@ -59,9 +67,9 @@ def remove_invalid_moves(self, avilable_moves, king_position ):
                 self.game_state[x].move(move.possible_move, self.game_state, self.flags) 
 
                 if(piece.label == 'K' or piece.label == 'k'):
-                    check = gl.check_for_check(self, move.possible_move)
+                    check = gl.check_for_check(self, move.possible_move, "Black")
                 else:
-                    check = gl.check_for_check(self, king_position)
+                    check = gl.check_for_check(self, king_position, "Black")
                 
                 if(check == True):
                     remove_these_moves.append(move)
@@ -81,7 +89,7 @@ def generate_moves(self):
     avilable_moves = []
 
     king_position = gl.find_king(self, "Black")
-    check = gl.check_for_check(self, king_position)
+    check = gl.check_for_check(self, king_position, "Black")
 
     for piece in self.game_state:
         if(piece.color == "Black"):

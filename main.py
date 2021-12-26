@@ -5,7 +5,7 @@
 """"""
 # =============================================================================
 # TODO
-#
+# Pawn can move trough one puce if two move squaers
 # =============================================================================
 # Imports
 from board import *
@@ -22,7 +22,7 @@ pygame.init()
 #FEN_string =  '8/8/8/2k5/2pP4/8/B7/4K3 b - d3 0 3'
 #FEN_string =  'r6r/1b2k1bq/8/8/7B/8/8/R3K2R b KQ - 3 2'
 
-FEN_string =  'r3k2r/p1pp1pb1/bn2Qnp1/2qPN3/1p2P3/2N5/PPPBBPPP/R3K2R b KQkq - 3 2'
+FEN_string =  '2kr3r/p1ppqpb1/bn2Qnp1/3PN3/1p2P3/2N5/PPPBBPPP/R3K2R b KQ - 3 2'
 
 #FEN_string =  '8/4k3/8/8/7B/8/8/4KRR2 b KQ - 3 2'
 #FEN_string =  '8/4k1bq/8/8/7B/8/8/4K3 b KQ - 3 2'
@@ -56,6 +56,8 @@ while(1):
                 move_piece(board_state, drop_pos, selected_piece)
             selected_piece = None
             drop_pos = None
+
+    casteling_check(board_state)
     
     #if((board_state.move_number) % 2) == 0:
         #ai.random_move(board_state)

@@ -8,10 +8,9 @@
 # =============================================================================
 # Imports
 import pygame
-from pieces.pawn import Pawn
-from postition import *
 import board
-import pieces.king as king
+from postition import *
+from pieces.king import *
 # =============================================================================
 def find_king(self, color):
     for piece in self.game_state:
@@ -23,15 +22,16 @@ def find_king(self, color):
                 return piece.position
 
 #Returns True if the square in question is in check otherwise false
-def check_for_check(self, square_to_ceck):
+def check_for_check(self, square_to_ceck, color):
     avilable_moves = []
     
     for piece in self.game_state:
-        moves = piece.move(None, self.game_state, self.flags)
-        for move in moves:
-                if(move.x >= 1 and move.x <= 8):
-                    if(move.y >= 1 and move.y <= 8):
-                        avilable_moves.append(move)
+        if(piece.color != color):
+            moves = piece.move(None, self.game_state, self.flags)
+            for move in moves:
+                    if(move.x >= 1 and move.x <= 8):
+                        if(move.y >= 1 and move.y <= 8):
+                            avilable_moves.append(move)
 
     for move in avilable_moves:
         if(move == square_to_ceck):
@@ -62,10 +62,10 @@ def move_piece(self, new_pos, selected_piece):
     king_position = find_king(self, selected_piece.color)
 
     if(selected_piece.label == 'K' or selected_piece.label == 'k'):
-        check = check_for_check(self, new_pos)
-        king.casteling_check(self)
+        check = check_for_check(self, new_pos, selected_piece.color)
+        casteling_check(self)
     else:
-        check = check_for_check(self, king_position)
+        check = check_for_check(self, king_position, selected_piece.color)
 
     if(check == True):
         board.mark_king()
@@ -95,15 +95,74 @@ def move_while_check(self, new_pos, king_position, selected_piece):
     move_order(self, new_pos, selected_piece)
 
     if(selected_piece.label == 'K' or selected_piece.label == 'k'):
-        check = check_for_check(self, new_pos)
+        check = check_for_check(self, new_pos, selected_piece.color)
     else:
-        check = check_for_check(self, king_position)
+        check = check_for_check(self, king_position, selected_piece.color)
 
     if(check == True):
         self.game_state.clear()
         self.board_setup(old_state)
     
     return None
+
+def casteling_check(self):
+    king_side_check_white = False
+    queen_side_check_white = False
+    king_side_check_black = False
+    queen_side_check_black = False
+    
+    if(check_for_check(self, Position(7, 1), "White")):
+        king_side_check_white = True
+    if(check_for_check(self, Position(6, 1), "White")):
+        king_side_check_white = True
+    if(check_for_check(self, Position(5, 1), "White")):
+        king_side_check_white = True
+
+    if(king_side_check_white == True):
+        self.flags.king_side_check_white = True
+    else:
+        self.flags.king_side_check_white = False
+
+    if(check_for_check(self, Position(5, 1), "White")):
+        queen_side_check_white = True
+    if(check_for_check(self, Position(4, 1), "White")):
+        queen_side_check_white = True
+    if(check_for_check(self, Position(3, 1), "White")):
+        queen_side_check_white = True
+    if(check_for_check(self, Position(2, 1), "White")):
+        queen_side_check_white = True
+
+    if(queen_side_check_white == True):
+        self.flags.queen_side_check_white = True
+    else:
+        self.flags.queen_side_check_white = False
+
+    if(check_for_check(self, Position(5, 8), "Black")):
+        king_side_check_black = True
+    if(check_for_check(self, Position(6, 8), "Black")):
+        king_side_check_black = True
+    if(check_for_check(self, Position(7, 8), "Black")):
+        king_side_check_black = True
+
+
+    if(king_side_check_black == True):
+        self.flags.king_side_check_black = True
+    else:
+        self.flags.king_side_check_black = False
+
+    if(check_for_check(self, Position(5, 8), "Black")):
+        queen_side_check_black = True
+    if(check_for_check(self, Position(4, 8), "Black")):
+        queen_side_check_black = True
+    if(check_for_check(self, Position(3, 8), "Black")):
+        queen_side_check_black = True
+    if(check_for_check(self, Position(2, 8), "Black")):
+        queen_side_check_black = True
+
+    if(queen_side_check_black == True):
+        self.flags.queen_side_check_black = True
+    else:
+        self.flags.queen_side_check_black = False
 
     
 
