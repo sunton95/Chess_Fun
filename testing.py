@@ -16,7 +16,7 @@ from timeit import default_timer as timer
 # =============================================================================
 #A string on how the board will be set up for play
 
-FEN_string = 'K1k5/8/P7/8/8/8/8/8 b - - 0 1'
+FEN_string = 'K1k5/8/P7/8/8/8/8/8 w - - 0 1'
 
 #Problem fen strings
 #FEN_string = 'rnb2k1r/pp1Pbppp/2p5/q7/2B5/8/PPPQNnPP/RNB1K2R w KQ - 3 9' 39 nodes vet inte om rätt dock
@@ -30,16 +30,12 @@ selected_piece = None
 drop_pos = None
 casteling_check(board_state)
 
-old_state = board.generate_fen_string(board_state)
-board_state.game_state.clear()
-board_state.board_setup(old_state)
+depth = 6
+start = timer()
+nodes = ai.chess_engine(board_state, depth)
+end = timer()
 
-#depth = 1
-#start = timer()
-#nodes = ai.chess_engine(board_state, depth)
-#end = timer()
-
-#print("nodes = {}, elapsed time = {:.2f}".format(nodes, (end - start)))
+print("nodes = {}, elapsed time = {:.2f}".format(nodes, (end - start)))
 
 [
    {

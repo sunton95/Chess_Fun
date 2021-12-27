@@ -38,5 +38,9 @@ class En_passant:
 
     def cord_change(self):
         x_cord = ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
+        cord = x_cord[(self.target.x - 1)] + str(self.target.y)
 
-        return x_cord[(self.target.x - 1)] + str(self.target.y)
+        if(cord == 'h0'):
+            return '-'
+        else:
+            return cord 
