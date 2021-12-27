@@ -15,8 +15,8 @@ from .queen import Queen
 
 class Pawn(Pieces):
 
-    en_passant_target = En_passant(None, None)
-    move_number = None
+    en_passant_target = En_passant(Position(0, 0), 0)
+    move_number = 0
     image_white = None
     image_black = None
 
@@ -105,4 +105,4 @@ class Pawn(Pieces):
                     try:
                         available_moves.remove(Position((self.position.x + moves[3].x), (self.position.y + moves[3].y)))
                     except ValueError:
-                          print("Kek")
+                        pass

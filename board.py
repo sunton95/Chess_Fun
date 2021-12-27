@@ -55,9 +55,11 @@ class GameBoard:
 
         if side_to_move == 'w':
             self.move_number = move - 1
+            Pawn.move_number = move - 1
         elif side_to_move == 'b':
             self.move_number = move
-    
+            Pawn.move_number = move
+
     def initilize_pieces(self, pieces_on_board):
         index = [1, 8]
 
@@ -270,8 +272,10 @@ def generate_fen_string(self):
 
     if ((self.move_number) % 2) == 0:
         string += ' b '
+        color = "black"
     elif((self.move_number) % 2) == 1:
         string += ' w '
+        color = "white"
 
     if(self.flags.white_king_side_castling == True):
         string += 'K'
@@ -292,8 +296,13 @@ def generate_fen_string(self):
     else:
         string += ' - '
 
-    string += '0 ' + str(self.move_number // 2)
+    if(color == "White"):
+        string += '0 ' + str((self.move_number // 2))
+    else:
+        string += '0 ' + str(self.move_number // 2 + 1)
+
     
+    print(string, self.move_number)
     return string
 
 

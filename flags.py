@@ -37,4 +37,6 @@ class En_passant:
         self.move_number = move_number
 
     def cord_change(self):
-        return 'd3'
+        x_cord = ['a','b', 'c', 'd', 'e', 'f', 'g', 'h']
+
+        return x_cord[(self.target.x - 1)] + str(self.target.y)

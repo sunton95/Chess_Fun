@@ -48,30 +48,24 @@ def random_move(self):
         
     self.move_number += 1
 
-    print("{} avail moves".format(len(avilable_moves)))
-    for move in avilable_moves:
-        print("Position {}, Move {}".format(move.piece_position, move.possible_move))
-
     avilable_moves.clear()
 
 #TODO the ai can move into a check position
-def remove_invalid_moves(self, avilable_moves, king_position ):
+def remove_invalid_moves(self, avilable_moves, king_position, color):
     old_state = board.generate_fen_string(self)
     remove_these_moves = []
     self.game_state.clear()
     self.board_setup(old_state)
 
     for x, piece in enumerate(self.game_state):
-        if(piece.position == Position(4, 7)):
-            print("Hej")
         for move in avilable_moves:
             if(move.piece_position == piece.position):
                 self.game_state[x].move(move.possible_move, self.game_state, self.flags) 
 
                 if(piece.label == 'K' or piece.label == 'k'):
-                    check = gl.check_for_check(self, move.possible_move, "Black")
+                    check = gl.check_for_check(self, move.possible_move, color)
                 else:
-                    check = gl.check_for_check(self, king_position, "Black")
+                    check = gl.check_for_check(self, king_position, color)
                 
                 if(check == True):
                     remove_these_moves.append(move)
@@ -99,6 +93,62 @@ def generate_moves(self):
                         avilable_moves.append(scuffedfish(piece.position, move))
     
     king_position = gl.find_king(self, "Black")
-    avilable_moves = remove_invalid_moves(self, avilable_moves, king_position )
+    avilable_moves = remove_invalid_moves(self, avilable_moves, king_position, "Black")
 
     return avilable_moves
+
+def depth_moves(self, nodes, depth, color):
+    depth = depth - 1
+    old_state = board.generate_fen_string(self)
+    self.game_state.clear()
+    self.board_setup(old_state)
+
+    avilable_moves = []
+
+    king_position = gl.find_king(self, color)
+    
+    for piece in self.game_state:
+        if(piece.color == color):
+            moves = piece.move(None, self.game_state, self.flags)
+            for move in moves:
+                if(move.x >= 1 and move.x <= 8):
+                    if(move.y >= 1 and move.y <= 8):
+                        avilable_moves.append(scuffedfish(piece.position, move))
+
+    avilable_moves = remove_invalid_moves(self, avilable_moves, king_position, color)
+    if(color == "White"):
+        color = "Black"
+    else:
+        color = "White"
+
+    for move in avilable_moves:
+        if(depth > 0):
+            nodes += 1
+            for piece in self.game_state:
+                if(piece.position == move.piece_position):
+                    self.move_number += 1
+                    piece.move(move.possible_move, self.game_state, self.flags) 
+            nodes = depth_moves(self, nodes, depth, color)         
+                    
+        else:
+            nodes += 1
+
+        self.game_state.clear()
+        self.board_setup(old_state)
+            
+    #print("nodes = {}".format(nodes))
+    return nodes
+
+def chess_engine(self, depth):
+    color = ""
+    avilable_moves = []
+    nodes = 0
+
+    if ((self.move_number) % 2) == 0:
+        color = "Black"
+    elif((self.move_number) % 2) == 1:
+        color = "White"
+    
+    nodes = depth_moves(self, nodes, depth, color)
+    
+    return nodes
