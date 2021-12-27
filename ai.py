@@ -4,6 +4,7 @@
 """"""
 # =============================================================================
 # TODO
+# ossible that checkmate fuck this up
 # =============================================================================
 # Imports
 import random
@@ -13,6 +14,9 @@ import game_logic as gl
 from pygame import init
 from pieces.pawn import Pawn
 from postition import Position
+
+import sys, pygame
+from pygame.locals import *
 # =============================================================================
 class scuffedfish:
     def __init__(self, piece_position, possible_move):
@@ -97,7 +101,7 @@ def generate_moves(self):
 
     return avilable_moves
 
-def depth_moves(self, nodes, depth, color):
+def depth_moves(self, nodes, depth, color, screen):
     depth = depth - 1
     old_state = board.generate_fen_string(self)
     self.game_state.clear()
@@ -114,8 +118,10 @@ def depth_moves(self, nodes, depth, color):
                 if(move.x >= 1 and move.x <= 8):
                     if(move.y >= 1 and move.y <= 8):
                         avilable_moves.append(scuffedfish(piece.position, move))
+    
+    if(len(avilable_moves) != 0):
+        avilable_moves = remove_invalid_moves(self, avilable_moves, king_position, color)
 
-    avilable_moves = remove_invalid_moves(self, avilable_moves, king_position, color)
     if(color == "White"):
         color = "Black"
     else:
@@ -128,9 +134,22 @@ def depth_moves(self, nodes, depth, color):
                 if(piece.position == move.piece_position):
                     self.move_number += 1
                     piece.move(move.possible_move, self.game_state, self.flags)
-            nodes = depth_moves(self, nodes, depth, color)         
+
+                    self.draw_background(screen)
+                    self.draw_pieces(screen, None)                    
+                    pygame.display.update()
+                    pygame.time.delay(500)
+
+                    nodes = depth_moves(self, nodes, depth, color,screen)         
                     
         else:
+            for piece in self.game_state:
+                if(piece.position == move.piece_position):
+                    piece.move(move.possible_move, self.game_state, self.flags)
+                    self.draw_background(screen)
+                    self.draw_pieces(screen, None)                    
+                    pygame.display.update()
+                    pygame.time.delay(500)
             nodes += 1
 
         self.game_state.clear()
@@ -139,7 +158,7 @@ def depth_moves(self, nodes, depth, color):
     #print("nodes = {}".format(nodes))
     return nodes
 
-def chess_engine(self, depth):
+def chess_engine(self, depth, screen):
     color = ""
     avilable_moves = []
     nodes = 0
@@ -149,6 +168,6 @@ def chess_engine(self, depth):
     elif((self.move_number) % 2) == 1:
         color = "White"
     
-    nodes = depth_moves(self, nodes, depth, color)
+    nodes = depth_moves(self, nodes, depth, color, screen)
     
     return nodes

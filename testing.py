@@ -5,37 +5,63 @@
 """"""
 # =============================================================================
 # TODO
-# Pawn can move trough one puce if two move squaers
+# move into check maybe a problem
 # =============================================================================
 # Imports
 from board import *
 from postition import *
+import sys, pygame
+from pygame.locals import *
 from game_logic import *
 import ai
-from timeit import default_timer as timer
 # =============================================================================
+
+pygame.init()
+
 #A string on how the board will be set up for play
+#FEN_string =  '8/8/8/2k5/2pP4/8/B7/4K3 b - d3 0 3'
+#FEN_string =  '8/8/8/8/8/7B/7P/8 w KQ - 3 2'
 
-FEN_string = 'K1k5/8/8/8/8/8/7p/8 b - - 0 1'
+FEN_string = '8/8/8/2k5/2pP4/8/B7/4K3 b - d3 0 3'
 
-#Problem fen strings
-#FEN_string = 'rnb2k1r/pp1Pbppp/2p5/q7/2B5/8/PPPQNnPP/RNB1K2R w KQ - 3 9' 39 nodes vet inte om rätt dock
+#FEN_string =  '8/4k3/8/8/7B/8/8/4KRR2 b KQ - 3 2'
+#FEN_string =  '8/4k1bq/8/8/7B/8/8/4K3 b KQ - 3 2'
+#FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+
+#resolution of the game
+screen = pygame.display.set_mode((800, 800))
+pygame.display.set_caption('Extreme Chess')
 
 #Initilize the game and pieces posisiton
 board_state = GameBoard(move_number = 0)
+board_state.init_images()
 board_state.board_setup(FEN_string)
 
 #variables for draging the pices in UI
 selected_piece = None
 drop_pos = None
+
+
+piece = get_square_under_mouse(board_state.game_state)
+
 casteling_check(board_state)
 
-depth = 3
-start = timer()
-nodes = ai.chess_engine(board_state, depth)
-end = timer()
+board_state.draw_background(screen)
+board_state.draw_pieces(screen, selected_piece)
+depth = 2
+ai.chess_engine(board_state, depth, screen)
 
-print("nodes = {}, elapsed time = {:.2f}".format(nodes, (end - start)))
+pygame.display.update()
+pygame.time.delay(33)
+
+while(1):
+   for event in pygame.event.get():
+      if event.type in (QUIT, KEYDOWN):
+         running = False
+         sys.exit()
+
+
+
 
 [
    {
