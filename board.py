@@ -54,15 +54,11 @@ class GameBoard:
         move = move * 2
 
         if side_to_move == 'w':
-            self.move_number = move
-            Pawn.move_number = move
+            self.move_number = move - 1
+            Pawn.move_number = move - 1
         elif side_to_move == 'b':
             self.move_number = move
             Pawn.move_number = move
-
-        if(self.move_number == 0):
-            self.move_number = 1
-            Pawn.move_number = 1
 
 
     def initilize_pieces(self, pieces_on_board):
@@ -307,8 +303,9 @@ def generate_fen_string(self):
     else:
         string += ' - '
 
-    string += '0 ' + str((self.move_number // 2))
+    string += '0 ' + str(((self.move_number + 1) // 2))
 
+    print(string)
     return string
 
 

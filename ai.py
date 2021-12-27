@@ -102,7 +102,6 @@ def depth_moves(self, nodes, depth, color):
     old_state = board.generate_fen_string(self)
     self.game_state.clear()
     self.board_setup(old_state)
-    print(old_state)
 
     avilable_moves = []
 
