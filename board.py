@@ -5,7 +5,7 @@
 setup of the game. """
 # =============================================================================
 # TODO
-#Add casteling, add en passant check
+#
 # =============================================================================
 # Imports
 from pieces.bishop import *
@@ -54,11 +54,16 @@ class GameBoard:
         move = move * 2
 
         if side_to_move == 'w':
-            self.move_number = move - 1
-            Pawn.move_number = move - 1
+            self.move_number = move
+            Pawn.move_number = move
         elif side_to_move == 'b':
             self.move_number = move
             Pawn.move_number = move
+
+        if(self.move_number == 0):
+            self.move_number = 1
+            Pawn.move_number = 1
+
 
     def initilize_pieces(self, pieces_on_board):
         index = [1, 8]
@@ -253,7 +258,6 @@ def remove_spaces(string):
 
 
 def generate_fen_string(self):
-    #FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
     string = '                                                                '
     string = list(string)
     en_passant = None
@@ -277,17 +281,24 @@ def generate_fen_string(self):
         string += ' w '
         color = "white"
 
+    #Casteling string
+    castling = False
     if(self.flags.white_king_side_castling == True):
         string += 'K'
+        castling = True
     if(self.flags.white_queen_side_castling == True):
         string += 'Q'
+        castling = True
     if(self.flags.black_king_side_castling == True):
         string += 'k'
+        castling = True
     if(self.flags.black_queen_side_castling == True):
         string += 'q'
+        castling = True
+    if(castling == False):
+        string += '-'
 
-    #TODO Add correct conversion between position and chess notation
-    #creats a bugg somewhere
+    #Adds en passant string
     if(en_passant != None and en_passant.en_passant_target.move_number != None):
         if((en_passant.en_passant_target.move_number + 1) == self.move_number):
             string += ' ' + en_passant.en_passant_target.cord_change() + ' '
@@ -296,13 +307,8 @@ def generate_fen_string(self):
     else:
         string += ' - '
 
-    if(color == "White"):
-        string += '0 ' + str((self.move_number // 2))
-    else:
-        string += '0 ' + str(self.move_number // 2 + 1)
+    string += '0 ' + str((self.move_number // 2))
 
-    
-    print(string, self.move_number)
     return string
 
 
