@@ -14,54 +14,48 @@ import sys, pygame
 from pygame.locals import *
 from game_logic import *
 import ai
+import time
 # =============================================================================
-
-pygame.init()
-
-#A string on how the board will be set up for play
-#FEN_string =  '8/8/8/2k5/2pP4/8/B7/4K3 b - d3 0 3'
-#FEN_string =  '8/8/8/8/8/7B/7P/8 w KQ - 3 2'
-
-FEN_string = '8/8/8/2k5/2pP4/8/B7/4K3 b - d3 0 3'
-
-#FEN_string =  '8/4k3/8/8/7B/8/8/4KRR2 b KQ - 3 2'
-#FEN_string =  '8/4k1bq/8/8/7B/8/8/4K3 b KQ - 3 2'
-#FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+screen = None
+#pygame.init()
 
 #resolution of the game
-screen = pygame.display.set_mode((800, 800))
-pygame.display.set_caption('Extreme Chess')
-
-#Initilize the game and pieces posisiton
-board_state = GameBoard(move_number = 0)
-board_state.init_images()
-board_state.board_setup(FEN_string)
+#screen = pygame.display.set_mode((800, 800))
+#pygame.display.set_caption('Extreme Chess')
 
 #variables for draging the pices in UI
 selected_piece = None
 drop_pos = None
 
+#A string on how the board will be set up for play
+FEN_string = 'rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8'
 
-piece = get_square_under_mouse(board_state.game_state)
-
+#Initilize the game and pieces posisiton
+board_state = GameBoard(move_number = 0)
+#board_state.init_images()
+board_state.board_setup(FEN_string)
 casteling_check(board_state)
 
-board_state.draw_background(screen)
-board_state.draw_pieces(screen, selected_piece)
+
+start = time.time()
 depth = 2
-ai.chess_engine(board_state, depth, screen)
-
-pygame.display.update()
-pygame.time.delay(33)
-
-while(1):
-   for event in pygame.event.get():
-      if event.type in (QUIT, KEYDOWN):
-         running = False
-         sys.exit()
+nodes = ai.chess_engine(board_state, depth, screen)
+end = time.time()
 
 
+print("Done, Nodes = {}, Elapsed time = {:.4f}".format(nodes, (end - start)))
 
+def kek():
+   pygame.display.update()
+   pygame.time.delay(33)
+
+   while(1):
+      for event in pygame.event.get():
+         if event.type in (QUIT, KEYDOWN):
+            running = False
+            sys.exit()
+
+#kek()
 
 [
    {

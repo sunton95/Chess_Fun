@@ -22,7 +22,7 @@ pygame.init()
 #FEN_string =  '8/8/8/2k5/2pP4/8/B7/4K3 b - d3 0 3'
 #FEN_string =  '8/8/8/8/8/7B/7P/8 w KQ - 3 2'
 
-FEN_string = 'K1k11111/11111111/P1111111/11111111/11111111/11111111/11111111/11111111 w - - 0 1'
+FEN_string = 'rnbq1k1r/pp1Pbppp/11p11111/11111111/11B11111/11111111/PPP1NnPP/RNBQKR11 b Q h3 0 8'
 
 #FEN_string =  '8/4k3/8/8/7B/8/8/4KRR2 b KQ - 3 2'
 #FEN_string =  '8/4k1bq/8/8/7B/8/8/4K3 b KQ - 3 2'
