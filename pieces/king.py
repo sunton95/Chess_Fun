@@ -16,6 +16,8 @@ class King(Pieces):
 
     image_white = None
     image_black = None
+    white_king_position = None
+    black_king_position = None
 
     def __init__(self, color, position, label):
         super().__init__(color, position, label)

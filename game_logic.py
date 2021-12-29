@@ -23,22 +23,16 @@ def find_king(self, color):
 
 #Returns True if the square in question is in check otherwise false
 def check_for_check(self, square_to_ceck, color):
-    avilable_moves = []
-    
     for piece in self.game_state:
         if(piece.color != color):
             moves = piece.move(None, self.game_state, self.flags)
             for move in moves:
                     if(move.x >= 1 and move.x <= 8):
                         if(move.y >= 1 and move.y <= 8):
-                            avilable_moves.append(move)
-
-    for move in avilable_moves:
-        if(move == square_to_ceck):
-            return True
+                            if(move == square_to_ceck):
+                                return True
 
     return False
-
 
 #Gets a piece on the board
 def get_square_under_mouse(game_state):

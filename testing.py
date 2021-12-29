@@ -17,7 +17,8 @@ import ai
 import time
 from pieces.pieces_main import *
 # =============================================================================
-# 418.32 Nodes per sec current best 9322
+# 421.02 Nodes per sec current best 9322
+# Current best 2060.56 Nodes per sec
 screen = None
 
 
@@ -41,7 +42,7 @@ board_state.board_setup(FEN_string)
 casteling_check(board_state)
 
 start = time.time()
-depth = 3
+depth = 4
 ai.chess_engine(board_state, depth, screen)
 end = time.time()
 nodes = ai.scuffedfish.nodes

@@ -16,17 +16,24 @@ import game_logic as gl
 from pygame import init
 from pieces.pawn import Pawn
 from postition import Position
-
 import sys, pygame
 from pygame.locals import *
 # =============================================================================
 class scuffedfish:
 
     nodes = 0
+    KNIGHT = 500
+    KING = 1000
+    QUEEN = 800
+    BISHOP = 500
+    ROOK = 600
+    PAWN = 100
 
-    def __init__(self, piece_position, possible_move):
+    
+    def __init__(self, piece_position, move, eval_score):
         self.piece_position = piece_position
-        self.possible_move = possible_move
+        self.move = move
+        self.eval_score = eval_score 
 
     def __str__(self):
         return "piece = ({}, {}) move = ({}, {})".format(self.piece_position.x,
@@ -34,37 +41,70 @@ class scuffedfish:
                                             self.possible_move.x,
                                             self.possible_move.y )
 
-def random_move(self):
+def fast_check(self, square_to_ceck, attacking_moves):   
+    for move in attacking_moves:
+        if(move.possible_move.x >= 1 and move.possible_move.x <= 8):
+            if(move.possible_move.y >= 1 and move.possible_move.y <= 8):
+                if(move.possible_move == square_to_ceck):
+                    return True
 
-    Pawn.move_number = self.move_number
+    return False
 
-    avilable_moves = generate_moves(self)
-
-    move_range = len(avilable_moves)
-
-    if(move_range == 0):
-        print("CHECK m8 motherfuicker")
-        return None
-
-    x = random.randint(0, (move_range - 1))
-
-    if(self.move_number == 4):
-         self.game_state[0].move(Position(4,6), self.game_state, self.flags)
-
-    for piece in self.game_state:
-        if(piece.position == avilable_moves[x].piece_position):
-            piece.move(avilable_moves[x].possible_move, self.game_state, self.flags)
-        
-    self.move_number += 1
-
-    avilable_moves.clear()
-
-#TODO the ai can move into a check position
-def remove_invalid_moves(self, avilable_moves, king_position, color):
+def find_nodes_of_pos(self, nodes, depth, color, screen):
+    depth = depth - 1
     old_state = board.generate_fen_string(self)
-    remove_these_moves = []
     self.game_state.clear()
     self.board_setup(old_state)
+
+    color, avilable_moves = generate_moves(self, color, old_state)
+
+    if(len(avilable_moves) == 0):     
+        print("CheckMate" + " " + old_state)
+    
+    Pawn.en_passant_target.target = Position(0, 0)
+    scuffedfish.nodes += len(avilable_moves)
+
+    if(depth > 0):
+        for move in avilable_moves:
+            for piece in self.game_state:
+                if(piece.position == move.piece_position):
+                    self.move_number += 1
+                    piece.move(move.possible_move, self.game_state, self.flags)
+                    #draw_screen(self, screen)
+                    find_nodes_of_pos(self, nodes, depth, color, screen) 
+
+                    self.game_state.clear()
+                    self.board_setup(old_state)
+
+def generate_moves(self, color, old_state):
+    avilable_moves = []
+    attacking_moves = []
+    remove_these_moves = []
+    
+    for piece in self.game_state:
+        if(piece.color == color):
+            moves = piece.move(None, self.game_state, self.flags)
+            for move in moves:
+                if(move.x >= 1 and move.x <= 8):
+                    if(move.y >= 1 and move.y <= 8):
+                        avilable_moves.append(scuffedfish(piece.position, move))
+        if(piece.color != color):
+            moves = piece.move(None, self.game_state, self.flags)
+            for move in moves:
+                if(move.x >= 1 and move.x <= 8):
+                    if(move.y >= 1 and move.y <= 8):
+                        attacking_moves.append(scuffedfish(piece.position, move))                      
+        if(piece.label == 'k'):
+            King.black_king_position = piece.position
+        if(piece.label == 'K'):
+           King.white_king_position = piece.position
+
+    if(color == "White"):
+        color = "Black"
+        king_position = King.white_king_position
+    else:
+        color = "White" 
+        king_position = King.black_king_position   
 
     for x, piece in enumerate(self.game_state):
         for move in avilable_moves:
@@ -72,9 +112,9 @@ def remove_invalid_moves(self, avilable_moves, king_position, color):
                 self.game_state[x].move(move.possible_move, self.game_state, self.flags) 
 
                 if(piece.label == 'K' or piece.label == 'k'):
-                    check = gl.check_for_check(self, move.possible_move, color)
+                    check = fast_check(self, move.possible_move, attacking_moves)
                 else:
-                    check = gl.check_for_check(self, king_position, color)
+                    check = fast_check(self, king_position, attacking_moves)
                 
                 if(check == True):
                     remove_these_moves.append(move)
@@ -88,54 +128,27 @@ def remove_invalid_moves(self, avilable_moves, king_position, color):
 
     self.game_state.clear()
     self.board_setup(old_state)
-    return avilable_moves
 
-def generate_moves(self):
-    avilable_moves = []
-
-    for piece in self.game_state:
-        if(piece.color == "Black"):
-            moves = piece.move(None, self.game_state, self.flags)
-            for move in moves:
-                if(move.x >= 1 and move.x <= 8):
-                    if(move.y >= 1 and move.y <= 8):
-                        avilable_moves.append(scuffedfish(piece.position, move))
+    return color,avilable_moves
     
-    king_position = gl.find_king(self, "Black")
-    avilable_moves = remove_invalid_moves(self, avilable_moves, king_position, "Black")
+def draw_screen(self, screen):
+    self.draw_background(screen)
+    self.draw_pieces(screen, None)                    
+    pygame.display.update()
+    pygame.time.delay(500)
 
-    return avilable_moves
-
-def depth_moves(self, nodes, depth, color, screen):
+def evaluate_depth(self, nodes, depth, color, screen):
     depth = depth - 1
     old_state = board.generate_fen_string(self)
     self.game_state.clear()
     self.board_setup(old_state)
 
-    avilable_moves = []
-
-    king_position = gl.find_king(self, color)
-    
-    for piece in self.game_state:
-        if(piece.color == color):
-            moves = piece.move(None, self.game_state, self.flags)
-            for move in moves:
-                if(move.x >= 1 and move.x <= 8):
-                    if(move.y >= 1 and move.y <= 8):
-                        avilable_moves.append(scuffedfish(piece.position, move))
-    
-    avilable_moves = remove_invalid_moves(self, avilable_moves, king_position, color)
+    color, avilable_moves = generate_moves(self, color, old_state)
 
     if(len(avilable_moves) == 0):     
         print("CheckMate" + " " + old_state)
     
     Pawn.en_passant_target.target = Position(0, 0)
-
-    if(color == "White"):
-        color = "Black"
-    else:
-        color = "White"
-
     scuffedfish.nodes += len(avilable_moves)
 
     if(depth > 0):
@@ -145,25 +158,32 @@ def depth_moves(self, nodes, depth, color, screen):
                     self.move_number += 1
                     piece.move(move.possible_move, self.game_state, self.flags)
                     #draw_screen(self, screen)
-                    depth_moves(self, nodes, depth, color,screen) 
+                    find_nodes_of_pos(self, nodes, depth, color, screen) 
 
                     self.game_state.clear()
                     self.board_setup(old_state)
 
-    #print("Depth = {} Nodes = {}".format(node_depth, nodes))
-    #print(scuffedfish.nodes)
 
-def draw_screen_two(self, screen, move):
-    for piece in self.game_state:
-        if(piece.position == move.piece_position):
-            piece.move(move.possible_move, self.game_state, self.flags)
-            draw_screen(self, screen)
+def find_best_move(self, nodes, depth, color, screen)():
+    old_state = board.generate_fen_string(self)
+    self.game_state.clear()
+    self.board_setup(old_state)
+    possible_moves = []
 
-def draw_screen(self, screen):
-    self.draw_background(screen)
-    self.draw_pieces(screen, None)                    
-    pygame.display.update()
-    pygame.time.delay(500)
+    color, avilable_moves = generate_moves(self, color, old_state)
+    Pawn.en_passant_target.target = Position(0, 0)
+
+    for move in avilable_moves:
+        for piece in self.game_state:
+            if(piece.position == move.piece_position):
+                self.move_number += 1
+                pos = piece.position
+                piece.move(move.possible_move, self.game_state, self.flags)
+                eval_score = evaluate_depth(self, nodes, depth, color, screen)
+                possible_moves.append(scuffedfish(pos ,move.possible_move, eval_score))    
+                self.game_state.clear()
+                self.board_setup(old_state)
+                
 
 def chess_engine(self, depth, screen):
     color = ""
@@ -175,6 +195,8 @@ def chess_engine(self, depth, screen):
     elif((self.move_number) % 2) == 1:
         color = "White"
     
-    nodes = depth_moves(self, nodes, depth, color, screen)
+    #nodes = find_nodes_of_pos(self, nodes, depth, color, screen)
+
+    best_move = find_best_move(self, nodes, depth, color, screen)
     
     return nodes

@@ -76,7 +76,8 @@ class GameBoard:
             elif pieces == 'Q':
                 self.game_state.append(Queen("White", index, "Q"))
             elif pieces == 'K':
-                self.game_state.append(King("White", index, "K")) 
+                self.game_state.append(King("White", index, "K"))
+                King.white_king_position = Position(index[0], index[1]) 
             elif pieces == 'p':
                 self.game_state.append(Pawn("Black", index, "p"))
             elif pieces == 'r':
@@ -88,7 +89,8 @@ class GameBoard:
             elif pieces == 'q':
                 self.game_state.append(Queen("Black", index, "q")) 
             elif pieces == 'k':
-                self.game_state.append(King("Black", index, "k"))  
+                self.game_state.append(King("Black", index, "k"))
+                King.black_king_position = Position(index[0], index[1])  
 
             if pieces == "/":
                 index[1] -= 1
@@ -305,7 +307,7 @@ def generate_fen_string(self):
         string += ' - '
 
     string += '0 ' + str(((self.move_number + 1) // 2))
-    
+
     return string
 
 def format_fen_string_remove_ones(string):
