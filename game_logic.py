@@ -67,9 +67,6 @@ def move_piece(self, new_pos, selected_piece):
     else:
         check = check_for_check(self, king_position, selected_piece.color)
 
-
-
-        
     move_while_check(self, new_pos, king_position, selected_piece)
 
     #Shifts so each player take one turn each. White begins

@@ -6,6 +6,7 @@
 # TODO
 # ossible that checkmate fuck this up
 # En passant not generated correctly in FEN string
+# Have a varible that always points to the king, removes some for loops prob
 # =============================================================================
 # Imports
 import random
@@ -20,6 +21,9 @@ import sys, pygame
 from pygame.locals import *
 # =============================================================================
 class scuffedfish:
+
+    nodes = 0
+
     def __init__(self, piece_position, possible_move):
         self.piece_position = piece_position
         self.possible_move = possible_move
@@ -120,35 +124,34 @@ def depth_moves(self, nodes, depth, color, screen):
                     if(move.y >= 1 and move.y <= 8):
                         avilable_moves.append(scuffedfish(piece.position, move))
     
-    if(len(avilable_moves) != 0):
-        print("CheckMater" + " " + old_state)
-        avilable_moves = remove_invalid_moves(self, avilable_moves, king_position, color)
+    avilable_moves = remove_invalid_moves(self, avilable_moves, king_position, color)
+
+    if(len(avilable_moves) == 0):     
+        print("CheckMate" + " " + old_state)
+    
+    Pawn.en_passant_target.target = Position(0, 0)
 
     if(color == "White"):
         color = "Black"
     else:
         color = "White"
 
-    for move in avilable_moves:
-        if(depth > 0):
-            nodes += 1
+    scuffedfish.nodes += len(avilable_moves)
+
+    if(depth > 0):
+        for move in avilable_moves:
             for piece in self.game_state:
                 if(piece.position == move.piece_position):
                     self.move_number += 1
                     piece.move(move.possible_move, self.game_state, self.flags)
                     #draw_screen(self, screen)
+                    depth_moves(self, nodes, depth, color,screen) 
 
-                    nodes = depth_moves(self, nodes, depth, color,screen)         
-                    
-        else:
-            #draw_screen_two(self, screen, move)
-            nodes += 1
+                    self.game_state.clear()
+                    self.board_setup(old_state)
 
-        self.game_state.clear()
-        self.board_setup(old_state)
-            
-    #print("nodes = {}".format(nodes))
-    return nodes
+    #print("Depth = {} Nodes = {}".format(node_depth, nodes))
+    #print(scuffedfish.nodes)
 
 def draw_screen_two(self, screen, move):
     for piece in self.game_state:

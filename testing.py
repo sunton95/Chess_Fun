@@ -15,11 +15,14 @@ from pygame.locals import *
 from game_logic import *
 import ai
 import time
+from pieces.pieces_main import *
 # =============================================================================
+# 418.32 Nodes per sec current best 9322
 screen = None
-#pygame.init()
+
 
 #resolution of the game
+#pygame.init()
 #screen = pygame.display.set_mode((800, 800))
 #pygame.display.set_caption('Extreme Chess')
 
@@ -27,8 +30,9 @@ screen = None
 selected_piece = None
 drop_pos = None
 
-#A string on how the board will be set up for play
-FEN_string = 'rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8'
+#A string on how the board will be set up for play 
+FEN_string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'
+
 
 #Initilize the game and pieces posisiton
 board_state = GameBoard(move_number = 0)
@@ -36,14 +40,12 @@ board_state = GameBoard(move_number = 0)
 board_state.board_setup(FEN_string)
 casteling_check(board_state)
 
-
 start = time.time()
-depth = 2
-nodes = ai.chess_engine(board_state, depth, screen)
+depth = 3
+ai.chess_engine(board_state, depth, screen)
 end = time.time()
-
-
-print("Done, Nodes = {}, Elapsed time = {:.4f}".format(nodes, (end - start)))
+nodes = ai.scuffedfish.nodes
+print("Done, Nodes = {}, Elapsed time = {:.4f}, Nodes per second = {:.2f}, Pieces Captured = {}".format(nodes, (end - start), (nodes/(end - start)), Pieces.captures))
 
 def kek():
    pygame.display.update()
@@ -62,11 +64,13 @@ def kek():
       "depth":3,
       "nodes":62379,
       "fen":"rnbq1k1r/pp1Pbppp/2p5/8/2B5/8/PPP1NnPP/RNBQK2R w KQ - 1 8"
+      #Time test 1: 104.6938 sec, 55508 Nodes
    },
    {
       "depth":3,
       "nodes":89890,
       "fen":"r4rk1/1pp1qppp/p1np1n2/2b1p1B1/2B1P1b1/P1NP1N2/1PP1QPPP/R4RK1 w - - 0 10"
+      #Time test 1:  sec, 214.3170  Nodes 92015
    },
    {
       "depth":6,

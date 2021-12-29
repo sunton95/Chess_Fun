@@ -58,17 +58,11 @@ class Pawn(Pieces):
         if(Pawn.en_passant_target.target == (moves[1] + self.position)):
             if((Pawn.en_passant_target.move_number + 1) == (Pawn.move_number)):
                 available_moves.append(moves[1] + self.position)
+                cord = self.en_passant_take(cord, game_state, available_moves)
         elif(Pawn.en_passant_target.target == (moves[2] + self.position)):
             if((Pawn.en_passant_target.move_number + 1) == (Pawn.move_number)):
                 available_moves.append(moves[2] + self.position)
-
-        for move in available_moves:       
-            if(move == Pawn.en_passant_target.target and move == cord):
-                for piece in game_state:
-                    if(piece.position == (cord + Position(0, 1)) or piece.position == (cord + Position(0, -1))):
-                        game_state.remove(piece)
-                        self.position = cord
-                return None
+                cord = self.en_passant_take(cord, game_state, available_moves)
                 
         self.piece_take(cord, game_state, available_moves, flags)
 
@@ -79,6 +73,16 @@ class Pawn(Pieces):
                 return None
 
         return available_moves
+
+    def en_passant_take(self, cord, game_state, available_moves):
+        for move in available_moves:       
+            if(move == Pawn.en_passant_target.target and move == cord):
+                for piece in game_state:
+                    if(piece.position == (cord + Position(0, 1)) or piece.position == (cord + Position(0, -1))):
+                        game_state.remove(piece)
+                        self.position = cord
+                        cord = None
+                        return cord                        
 
     def find_pawn_moves(self, cord, game_state, moves, available_moves):
         available_moves.append(Position((self.position.x + moves[0].x), (self.position.y + moves[0].y)))

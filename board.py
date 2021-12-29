@@ -264,11 +264,12 @@ def generate_fen_string(self):
         if(piece.label == 'p' or piece.label == 'P'):
             en_passant = piece
 
-
     fen_list = list(remove_spaces(''.join(string)))
     fen_list = fen_list[:-1]
     string = ''.join(fen_list)
     string = string[::-1]
+
+    string = format_fen_string_remove_ones(string)
 
     if ((self.move_number) % 2) == 0:
         string += ' b '
@@ -304,10 +305,27 @@ def generate_fen_string(self):
         string += ' - '
 
     string += '0 ' + str(((self.move_number + 1) // 2))
-
-    print(string)
+    
     return string
 
+def format_fen_string_remove_ones(string):
+    numeric_flag = False
+
+    for x, l in enumerate(string):
+        if(l.isnumeric()):
+            if(numeric_flag == True):
+                int_x = int(string[x])
+                int_y = int(string[(x - 1)])
+                string = string[:(x - 1)] + str(int_x + int_y) +  string[(x + 1):]
+                break
+            numeric_flag = True
+        else:
+            numeric_flag = False
+
+    if("11" in string):
+        string = format_fen_string_remove_ones(string)
+
+    return string
 
 if __name__ == "__main__":
     import main

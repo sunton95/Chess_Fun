@@ -13,6 +13,9 @@ from postition import *
 
 #Parent class for all the chesspieces
 class Pieces:
+    
+    captures = 0
+
     def __init__(self, color, position, label):
         self.color = color
         self.position = Position(position[0], position[1])
@@ -44,6 +47,7 @@ class Pieces:
                                 elif(pieces.position == Position(8, 8)):
                                     flags.black_king_side_castling = False
                             list.remove(pieces)
+                            Pieces.captures += 1
                     self.position = cord
                     break
     
