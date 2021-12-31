@@ -24,12 +24,6 @@ class Pieces:
     def __str__(self):
         return "{} {}".format(self.color, self.position)
     
-    def find_freindly(self, list, available_moves):
-        for pieces in list:
-            for move in available_moves:
-                if move == pieces.position and self.color == pieces.color:
-                    available_moves.remove(move)
-
     def piece_take(self, cord, list, available_moves, flags):
         if cord != None:
             for move in available_moves:
@@ -48,6 +42,7 @@ class Pieces:
                                     flags.black_king_side_castling = False
                             list.remove(pieces)
                             Pieces.captures += 1
+                            break
                     self.position = cord
                     break
     
@@ -58,9 +53,8 @@ class Pieces:
 
                 if(check_if_valid.x > 8 or check_if_valid.y > 8 or check_if_valid.x < 1 or check_if_valid.y < 1):
                     break
-                flag = self.check_occupied(available_moves, board_state, check_if_valid)
-
-                if(flag == True):
+                
+                if(self.check_occupied(available_moves, board_state, check_if_valid)):
                     available_moves.append(check_if_valid)
                 else:
                     break

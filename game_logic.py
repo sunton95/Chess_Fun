@@ -61,12 +61,8 @@ def move_piece(self, new_pos, selected_piece):
     else:
         check = check_for_check(self, king_position, selected_piece.color)
 
-    move_while_check(self, new_pos, king_position, selected_piece)
+    move(self, new_pos, king_position, selected_piece)
 
-    #Shifts so each player take one turn each. White begins
-    #move_order(self, new_pos, selected_piece)
-    #move_no_order_testing(self, new_pos, selected_piece)
-    
 def move_order(self, new_pos, selected_piece):
     if ((self.move_number) % 2) == 0:
         if (selected_piece.color == "Black"):
@@ -81,7 +77,7 @@ def move_no_order_testing(self, new_pos, selected_piece):
     selected_piece.move(new_pos, self.game_state, self.flags) 
     self.move_number += 1
 
-def move_while_check(self, new_pos, king_position, selected_piece):
+def move(self, new_pos, king_position, selected_piece):
     old_state = board.generate_fen_string(self)
     move_order(self, new_pos, selected_piece)
 

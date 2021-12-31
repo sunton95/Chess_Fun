@@ -30,7 +30,6 @@ class Rook(Pieces):
                     Position(-1, 0),
                     Position(0, -1))
 
-
         #If the rook moves castling ability is removed
         if(cord != None):
             if(self.position == Position(1, 1)):
@@ -44,4 +43,5 @@ class Rook(Pieces):
 
         available_moves = self.QRB_move(available_moves, board_state, move_dir)
         self.piece_take(cord, board_state, available_moves, flags) 
+
         return available_moves

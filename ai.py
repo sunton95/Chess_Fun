@@ -38,14 +38,14 @@ class scuffedfish:
     def __str__(self):
         return "piece = ({}, {}) move = ({}, {})".format(self.piece_position.x,
                                             self.piece_position.y,
-                                            self.possible_move.x,
-                                            self.possible_move.y )
+                                            self.move.x,
+                                            self.move.y )
 
 def fast_check(self, square_to_ceck, attacking_moves):   
     for move in attacking_moves:
-        if(move.possible_move.x >= 1 and move.possible_move.x <= 8):
-            if(move.possible_move.y >= 1 and move.possible_move.y <= 8):
-                if(move.possible_move == square_to_ceck):
+        if(move.move.x >= 1 and move.move.x <= 8):
+            if(move.move.y >= 1 and move.move.y <= 8):
+                if(move.move == square_to_ceck):
                     return True
 
     return False
@@ -69,7 +69,7 @@ def find_nodes_of_pos(self, nodes, depth, color, screen):
             for piece in self.game_state:
                 if(piece.position == move.piece_position):
                     self.move_number += 1
-                    piece.move(move.possible_move, self.game_state, self.flags)
+                    piece.move(move.move, self.game_state, self.flags)
                     #draw_screen(self, screen)
                     find_nodes_of_pos(self, nodes, depth, color, screen) 
 
@@ -87,13 +87,13 @@ def generate_moves(self, color, old_state):
             for move in moves:
                 if(move.x >= 1 and move.x <= 8):
                     if(move.y >= 1 and move.y <= 8):
-                        avilable_moves.append(scuffedfish(piece.position, move))
+                        avilable_moves.append(scuffedfish(piece.position, move, None))
         if(piece.color != color):
             moves = piece.move(None, self.game_state, self.flags)
             for move in moves:
                 if(move.x >= 1 and move.x <= 8):
                     if(move.y >= 1 and move.y <= 8):
-                        attacking_moves.append(scuffedfish(piece.position, move))                      
+                        attacking_moves.append(scuffedfish(piece.position, move, None))                      
         if(piece.label == 'k'):
             King.black_king_position = piece.position
         if(piece.label == 'K'):
@@ -109,10 +109,10 @@ def generate_moves(self, color, old_state):
     for x, piece in enumerate(self.game_state):
         for move in avilable_moves:
             if(move.piece_position == piece.position):
-                self.game_state[x].move(move.possible_move, self.game_state, self.flags) 
+                self.game_state[x].move(move.move, self.game_state, self.flags) 
 
                 if(piece.label == 'K' or piece.label == 'k'):
-                    check = fast_check(self, move.possible_move, attacking_moves)
+                    check = fast_check(self, move.move, attacking_moves)
                 else:
                     check = fast_check(self, king_position, attacking_moves)
                 
@@ -156,7 +156,7 @@ def evaluate_depth(self, nodes, depth, color, screen):
             for piece in self.game_state:
                 if(piece.position == move.piece_position):
                     self.move_number += 1
-                    piece.move(move.possible_move, self.game_state, self.flags)
+                    piece.move(move.move, self.game_state, self.flags)
                     #draw_screen(self, screen)
                     find_nodes_of_pos(self, nodes, depth, color, screen) 
 
@@ -164,7 +164,7 @@ def evaluate_depth(self, nodes, depth, color, screen):
                     self.board_setup(old_state)
 
 
-def find_best_move(self, nodes, depth, color, screen)():
+def find_best_move(self, nodes, depth, color, screen):
     old_state = board.generate_fen_string(self)
     self.game_state.clear()
     self.board_setup(old_state)
@@ -178,9 +178,9 @@ def find_best_move(self, nodes, depth, color, screen)():
             if(piece.position == move.piece_position):
                 self.move_number += 1
                 pos = piece.position
-                piece.move(move.possible_move, self.game_state, self.flags)
+                piece.move(move.move, self.game_state, self.flags)
                 eval_score = evaluate_depth(self, nodes, depth, color, screen)
-                possible_moves.append(scuffedfish(pos ,move.possible_move, eval_score))    
+                possible_moves.append(scuffedfish(pos ,move.move, eval_score))    
                 self.game_state.clear()
                 self.board_setup(old_state)
                 
@@ -195,8 +195,8 @@ def chess_engine(self, depth, screen):
     elif((self.move_number) % 2) == 1:
         color = "White"
     
-    #nodes = find_nodes_of_pos(self, nodes, depth, color, screen)
+    nodes = find_nodes_of_pos(self, nodes, depth, color, screen)
 
-    best_move = find_best_move(self, nodes, depth, color, screen)
+    #best_move = find_best_move(self, nodes, depth, color, screen)
     
     return nodes

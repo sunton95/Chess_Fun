@@ -41,36 +41,37 @@ class King(Pieces):
         available_moves.append(Position((self.position.x - 1), (self.position.y - 1)))
 
         #Checks if castling is possible and returns the avialbel moves
-        self.castling_move(cord, board_state, flags, available_moves)
+        if(self.position == Position(5, 1) or self.position == Position(5, 8)):
+            self.castling_move(cord, board_state, flags, available_moves)
 
-        #Special move when castling, moves both rook and king
-        if(cord == Position(7, 1) and self.position == Position(5, 1)):
-            for piece in board_state:
-                if(piece.position == Position(8, 1)):
-                    piece.position = Position(6, 1)
-                    self.position = cord
-            return None
-        if(cord == Position(3, 1) and self.position == Position(5, 1)):
-            for piece in board_state:
-                if(piece.position == Position(1, 1)):
-                    piece.position = Position(4, 1)
-                    self.position = cord
-            return None
-        if(cord == Position(7, 8) and self.position == Position(5, 8)):
-            for piece in board_state:
-                if(piece.position == Position(8, 8)):
-                    piece.position = Position(6, 8)
-                    self.position = cord
-            return None
-        if(cord == Position(3, 8) and self.position == Position(5, 8)):
-            for piece in board_state:
-                if(piece.position == Position(1, 8)):
-                    piece.position = Position(4, 8)
-                    self.position = cord
-            return None
+            #Special move when castling, moves both rook and king
+            if(cord == Position(7, 1) and self.position == Position(5, 1)):
+                for piece in board_state:
+                    if(piece.position == Position(8, 1)):
+                        piece.position = Position(6, 1)
+                        self.position = cord
+                return None
+            if(cord == Position(3, 1) and self.position == Position(5, 1)):
+                for piece in board_state:
+                    if(piece.position == Position(1, 1)):
+                        piece.position = Position(4, 1)
+                        self.position = cord
+                return None
+            if(cord == Position(7, 8) and self.position == Position(5, 8)):
+                for piece in board_state:
+                    if(piece.position == Position(8, 8)):
+                        piece.position = Position(6, 8)
+                        self.position = cord
+                return None
+            if(cord == Position(3, 8) and self.position == Position(5, 8)):
+                for piece in board_state:
+                    if(piece.position == Position(1, 8)):
+                        piece.position = Position(4, 8)
+                        self.position = cord
+                return None
         
         #Normal move is made with these functions
-        self.find_freindly(board_state, available_moves)
+        self.find_friend(board_state, available_moves)   
         self.piece_take(cord, board_state, available_moves, flags)
         return available_moves
 
@@ -131,3 +132,9 @@ class King(Pieces):
             elif(self.position== Position(5, 1)):
                 flags.white_king_side_castling = False
                 flags.white_queen_side_castling = False
+    
+    def find_friend(self, board_state, available_moves):
+        for pieces in board_state:
+            for move in available_moves:
+                if move == pieces.position and self.color == pieces.color:
+                    available_moves.remove(move)
