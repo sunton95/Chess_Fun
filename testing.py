@@ -27,6 +27,21 @@ screen = None
 #screen = pygame.display.set_mode((800, 800))
 #pygame.display.set_caption('Extreme Chess')
 
+def test_func(selected_piece, board_state):
+    start = time.time()
+    for x in range(0, 100000):
+       selected_piece.move(None, board_state.game_state, board_state.flags)
+    end = time.time()
+
+    print("Func 1, Elapsed time = {:.4f}".format((end - start)))
+
+    start = time.time()
+    for x in range(0, 100000):
+       selected_piece.move_2(None, board_state.game_state, board_state.flags)
+    end = time.time()
+
+    print("Func 2, Elapsed time = {:.4f}".format((end - start)))
+
 #variables for draging the pices in UI
 selected_piece = None
 drop_pos = None
@@ -40,31 +55,21 @@ board_state = GameBoard(move_number = 0)
 board_state.board_setup(FEN_string)
 casteling_check(board_state)
 
-for piece in board_state.game_state:
-   if(piece.label == "K"):
-      selected_piece = piece
+#for piece in board_state.game_state:
+   #if(piece.label == "K"):
+      #selected_piece = piece
       #BaseLine Elapsed time = 9.9493 knight
       #BaseLine Elapsed time = 50.7357 king
 
-
 depth = 4
-#ai.chess_engine(board_state, depth, screen)
-start = time.time()
-for x in range(0, 100000):
-   piece.move(None, board_state.game_state, board_state.flags)
-end = time.time()
-
-print("Func 1, Elapsed time = {:.4f}".format((end - start)))
 
 start = time.time()
-for x in range(0, 1000):
-   generate_fen_string(board_state)
+ai.chess_engine(board_state, depth, screen)
+#test_func(selected_piece, board_state)
+nodes = ai.scuffedfish.nodes
 end = time.time()
 
-print("Func 2, Elapsed time = {:.4f}".format((end - start)))
-
-#nodes = ai.scuffedfish.nodes
-#print("Done, Nodes = {}, Elapsed time = {:.4f}, Nodes per second = {:.2f}, Pieces Captured = {}".format(nodes, (end - start), (nodes/(end - start)), Pieces.captures))
+print("Done, Nodes = {}, Elapsed time = {:.4f}, Nodes per second = {:.2f}, Pieces Captured = {}".format(nodes, (end - start), (nodes/(end - start)), Pieces.captures))
 
 def kek():
    pygame.display.update()

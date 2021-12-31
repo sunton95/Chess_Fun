@@ -10,9 +10,10 @@
 import pygame
 import board
 from postition import Position
-from pieces.king import King
+
 # =============================================================================
 def find_king(self, color):
+    from pieces.king import King
     if(color == "White"):
         return King.white_king_position
     elif(color == "Black"):
