@@ -50,15 +50,15 @@ for piece in board_state.game_state:
 depth = 4
 #ai.chess_engine(board_state, depth, screen)
 start = time.time()
-for x in range(0, 10000):
-   move_piece(board_state, drop_pos, selected_piece)
+for x in range(0, 100000):
+   piece.move(None, board_state.game_state, board_state.flags)
 end = time.time()
 
 print("Func 1, Elapsed time = {:.4f}".format((end - start)))
 
 start = time.time()
-for x in range(0, 10000):
-   move_piece(board_state, drop_pos, selected_piece)
+for x in range(0, 1000):
+   generate_fen_string(board_state)
 end = time.time()
 
 print("Func 2, Elapsed time = {:.4f}".format((end - start)))

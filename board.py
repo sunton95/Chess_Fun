@@ -8,16 +8,15 @@ setup of the game. """
 #
 # =============================================================================
 # Imports
-from pieces.bishop import *
-from pieces.king import *
-from pieces.queen import *
-from pieces.knight import *
-from pieces.pawn import *
-from pieces.rook import *
+from pieces.bishop import Bishop
+from pieces.king import King
+from pieces.queen import Queen
+from pieces.knight import Knight
+from pieces.pawn import Pawn
+from pieces.rook import Rook
 from postition import Position
-from flags import Flags
-import os
-import pygame
+from flags import Flags, En_passant
+from pygame import image, transform, draw, Rect, Vector2, Surface, SRCALPHA, mouse
 # =============================================================================
 
 class GameBoard:
@@ -113,52 +112,52 @@ class GameBoard:
     #Loads each piece image and resizes it to 100px and returns a list with all images
     def init_images(self):
 
-        black_pawn = pygame.image.load('images/black_pawn.png').convert_alpha()
-        black_pawn = pygame.transform.scale(black_pawn, (100, 100))
+        black_pawn = image.load('images/black_pawn.png').convert_alpha()
+        black_pawn = transform.scale(black_pawn, (100, 100))
         Pawn.image_black = black_pawn
 
-        black_knight = pygame.image.load('images/black_knight.png').convert_alpha()
-        black_knight = pygame.transform.scale(black_knight, (100, 100))
+        black_knight = image.load('images/black_knight.png').convert_alpha()
+        black_knight = transform.scale(black_knight, (100, 100))
         Knight.image_black = black_knight
 
-        black_rook = pygame.image.load('images/black_rook.png').convert_alpha()
-        black_rook = pygame.transform.scale(black_rook, (100, 100))
+        black_rook = image.load('images/black_rook.png').convert_alpha()
+        black_rook = transform.scale(black_rook, (100, 100))
         Rook.image_black = black_rook
 
-        black_bishop = pygame.image.load('images/black_bishop.png').convert_alpha()
-        black_bishop = pygame.transform.scale(black_bishop, (100, 100))
+        black_bishop = image.load('images/black_bishop.png').convert_alpha()
+        black_bishop = transform.scale(black_bishop, (100, 100))
         Bishop.image_black = black_bishop
 
-        black_queen = pygame.image.load('images/black_queen.png').convert_alpha()
-        black_queen = pygame.transform.scale(black_queen, (100, 100))
+        black_queen = image.load('images/black_queen.png').convert_alpha()
+        black_queen = transform.scale(black_queen, (100, 100))
         Queen.image_black = black_queen
 
-        black_king = pygame.image.load('images/black_king.png').convert_alpha()
-        black_king = pygame.transform.scale(black_king, (100, 100))
+        black_king = image.load('images/black_king.png').convert_alpha()
+        black_king = transform.scale(black_king, (100, 100))
         King.image_black = black_king
 
-        white_pawn = pygame.image.load('images/white_pawn.png').convert_alpha()
-        white_pawn = pygame.transform.scale(white_pawn, (100, 100))
+        white_pawn = image.load('images/white_pawn.png').convert_alpha()
+        white_pawn = transform.scale(white_pawn, (100, 100))
         Pawn.image_white = white_pawn
 
-        white_knight = pygame.image.load('images/white_knight.png').convert_alpha()
-        white_knight = pygame.transform.scale(white_knight, (100, 100))
+        white_knight = image.load('images/white_knight.png').convert_alpha()
+        white_knight = transform.scale(white_knight, (100, 100))
         Knight.image_white = white_knight
 
-        white_rook = pygame.image.load('images/white_rook.png').convert_alpha()
-        white_rook = pygame.transform.scale(white_rook, (100, 100))
+        white_rook = image.load('images/white_rook.png').convert_alpha()
+        white_rook = transform.scale(white_rook, (100, 100))
         Rook.image_white = white_rook
 
-        white_bishop = pygame.image.load('images/white_bishop.png').convert_alpha()
-        white_bishop = pygame.transform.scale(white_bishop, (100, 100))
+        white_bishop = image.load('images/white_bishop.png').convert_alpha()
+        white_bishop = transform.scale(white_bishop, (100, 100))
         Bishop.image_white = white_bishop
 
-        white_queen = pygame.image.load('images/white_queen.png').convert_alpha()
-        white_queen = pygame.transform.scale(white_queen, (100, 100))
+        white_queen = image.load('images/white_queen.png').convert_alpha()
+        white_queen = transform.scale(white_queen, (100, 100))
         Queen.image_white = white_queen
 
-        white_king = pygame.image.load('images/white_king.png').convert_alpha()
-        white_king = pygame.transform.scale(white_king, (100, 100))
+        white_king = image.load('images/white_king.png').convert_alpha()
+        white_king = transform.scale(white_king, (100, 100))
         King.image_white = white_king
 
     def draw_background(self, screen):
@@ -169,13 +168,13 @@ class GameBoard:
         for x in range(0, 8):
             for y in range(0, 8):
                 if ((y + x) % 2) == 0:
-                    pygame.draw.rect(screen, ch_1, pygame.Rect((y * 100), (x * 100), 100, 100))
+                    draw.rect(screen, ch_1, Rect((y * 100), (x * 100), 100, 100))
                 else:
-                    pygame.draw.rect(screen, ch_2, pygame.Rect((y * 100), (x * 100), 100, 100))
+                    draw.rect(screen, ch_2, Rect((y * 100), (x * 100), 100, 100))
 
     def draw_drag(self, screen, selected_piece, game_state, flags):
         #Get the cordinate of the mouse so we know were the piece is dropped
-        mouse_pos = pygame.Vector2(pygame.mouse.get_pos())
+        mouse_pos = Vector2(mouse.get_pos())
         x = int((mouse_pos[0] // 100) + 1)
         y = int(7 - (mouse_pos[1] // 100) + 1)
         
@@ -186,13 +185,13 @@ class GameBoard:
                 pos_x = (selected_piece.position.x - 1 ) * 100
                 pos_y = 700 - ((selected_piece.position.y - 1) * 100)
                 rect = (pos_x, pos_y, 100, 100)
-                pygame.draw.rect(screen, (0, 255, 0, 50), rect, 2)
+                draw.rect(screen, (0, 255, 0, 50), rect, 2)
         
             screen.blit(selected_piece.image, ((mouse_pos[0] - 50), (mouse_pos[1] - 50)))
 
             avilable_moves = selected_piece.move(None, game_state, flags)
             for move in avilable_moves:
-                s = pygame.Surface((100,100), pygame.SRCALPHA)   # per-pixel alpha
+                s = Surface((100,100), SRCALPHA)   # per-pixel alpha
                 s.fill((255,0,0,128))                         # notice the alpha value in the color
                 screen.blit(s, (((move.x - 1) * 100), ((700 - (move.y - 1) * 100))))
 
@@ -202,6 +201,7 @@ class GameBoard:
     #Function for drawing the game in terminal and ignoring the GUI. Not used as of now
     def draw_board_terminal(self):
         #Clears the terminal before printing a new frame of the game
+        import os
         os.system('cls||clear')
 
         #Creates an empty list of all the positions on the board
@@ -306,9 +306,7 @@ def generate_fen_string(self):
     else:
         string += ' - '
 
-    string += '0 ' + str(((self.move_number + 1) // 2))
-
-    return string
+    return string + '0 ' + str(((self.move_number + 1) // 2))
 
 def format_fen_string_remove_ones(string):
     numeric_flag = False

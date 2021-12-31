@@ -9,15 +9,11 @@
 # Have a varible that always points to the king, removes some for loops prob
 # =============================================================================
 # Imports
-import random
 import board
 from pieces.king import King
-import game_logic as gl
-from pygame import init
 from pieces.pawn import Pawn
 from postition import Position
-import sys, pygame
-from pygame.locals import *
+from pygame import display, time
 # =============================================================================
 class scuffedfish:
 
@@ -28,7 +24,6 @@ class scuffedfish:
     BISHOP = 500
     ROOK = 600
     PAWN = 100
-
     
     def __init__(self, piece_position, move, eval_score):
         self.piece_position = piece_position
@@ -133,9 +128,11 @@ def generate_moves(self, color, old_state):
     
 def draw_screen(self, screen):
     self.draw_background(screen)
-    self.draw_pieces(screen, None)                    
-    pygame.display.update()
-    pygame.time.delay(500)
+    self.draw_pieces(screen, None)  
+
+    #Pygame                  
+    display.update()
+    time.delay(500)
 
 def evaluate_depth(self, nodes, depth, color, screen):
     depth = depth - 1

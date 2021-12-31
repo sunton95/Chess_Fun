@@ -9,7 +9,6 @@
 # Imports
 from .pieces_main import Pieces
 from postition import Position
-import game_logic as gl
 # =============================================================================
 
 class King(Pieces):

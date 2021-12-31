@@ -7,7 +7,6 @@
 #
 # =============================================================================
 # Imports
-from pygame.locals import Color
 from .pieces_main import Pieces
 from postition import Position
 # =============================================================================

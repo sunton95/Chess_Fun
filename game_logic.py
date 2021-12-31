@@ -9,17 +9,14 @@
 # Imports
 import pygame
 import board
-from postition import *
-from pieces.king import *
+from postition import Position
+from pieces.king import King
 # =============================================================================
 def find_king(self, color):
-    for piece in self.game_state:
-        if(color == "White"):
-            if(piece.label == 'K'):
-                return piece.position
-        elif(color == "Black"):
-            if(piece.label == 'k'):
-                return piece.position
+    if(color == "White"):
+        return King.white_king_position
+    elif(color == "Black"):
+        return King.black_king_position
 
 #Returns True if the square in question is in check otherwise false
 def check_for_check(self, square_to_ceck, color):
@@ -52,7 +49,6 @@ def move_piece(self, new_pos, selected_piece):
     if selected_piece.position == new_pos:
         return None
 
-    #TODO add a function that makes sure the move does not generate a check on self
     king_position = find_king(self, selected_piece.color)
 
     if(selected_piece.label == 'K' or selected_piece.label == 'k'):
